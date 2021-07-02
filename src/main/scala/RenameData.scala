@@ -1,0 +1,61 @@
+import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.functions.{input_file_name, lit, unix_timestamp}
+
+object RenameData {
+  val spark = SparkSession.builder().getOrCreate()
+  import spark.implicits._
+  def dataRenamed(data_rename:DataFrame): DataFrame = {
+
+    data_rename.select($"payload.*", $"payload")
+      .withColumnRenamed("objectClass", "object_class")
+      .select($"sysAudit.*", $"*").drop("sysAudit")
+      .withColumn("issueDate", QueryData.getTimestampWithMilisUDF($"issueDate", lit("yyyy-MM-dd'T'HH:mm:ss.SSSZ")))
+      .withColumn("inceptionDate", QueryData.getTimestampWithMilisUDF($"inceptionDate", lit("yyyy-MM-dd'T'HH:mm:ss.SSSZ")))
+      .withColumn("effectiveEndDate", QueryData.getTimestampWithMilisUDF($"effectiveEndDate", lit("yyyy-MM-dd'T'HH:mm:ss.SSSZ")))
+      .withColumn("transactionDate", QueryData.getTimestampWithMilisUDF($"transactionDate", lit("yyyy-MM-dd'T'HH:mm:ss.SSSZ")))
+      .withColumn("sysTxDateStamp", QueryData.getTimestampWithMilisUDF($"sysTxDateStamp", lit("yyyy-MM-dd'T'HH:mm:ss.SSSZ")))
+      .withColumnRenamed("agreementHolder", "agreement_holder")
+      .withColumnRenamed("agreementNumber", "agreement_number")
+      .withColumnRenamed("agreementStatus", "agreement_status")
+      .withColumnRenamed("agreementComponentId", "agreement_component_id")
+      .withColumnRenamed("agreementComponentStatus", "agreement_component_status")
+      .withColumnRenamed("walletAddress", "wallet_address")
+      .withColumnRenamed("transactionType", "transaction_type")
+      .withColumnRenamed("transactionDate", "transaction_date")
+      .withColumnRenamed("transactionValue", "transaction_value")
+      .withColumnRenamed("accountName", "account_name")
+      .withColumnRenamed("accountId", "account_id")
+      .withColumnRenamed("currencyCode", "currency_code")
+      .withColumnRenamed("fundId", "fund_id")
+      .withColumnRenamed("fundPrice", "fund_price")
+      .withColumnRenamed("coverageId", "coverage_id")
+      .withColumnRenamed("autoRenew", "auto_renew")
+      .withColumnRenamed("basePremiumRate", "base_premium_rate")
+      .withColumnRenamed("basePremiumAmount", "base_premium_amount")
+      .withColumnRenamed("billingMethod", "billing_method")
+      .withColumnRenamed("billingMode", "billing_mode")
+      .withColumnRenamed("effectiveEndDate", "effective_end_date")
+      .withColumnRenamed("finalPremiumAmount", "final_premium_amount")
+      .withColumnRenamed("inceptionDate", "inception_date")
+      .withColumnRenamed("issueDate", "issue_date")
+      .withColumnRenamed("faceAmount", "face_amount")
+      .withColumnRenamed("noClaimDiscountApplied", "no_claim_discount_applied")
+      .withColumnRenamed("objectClass", "sysAudit_object_class")
+      .withColumnRenamed("taxRate", "tax_rate")
+      .withColumnRenamed("isRider", "is_rider")
+      .withColumnRenamed("riderRef", "rider_ref")
+      .withColumnRenamed("noClaimDiscountRate", "no_claim_discount_rate")
+      .withColumnRenamed("underwritingParameters", "underwriting_parameters")
+      .withColumnRenamed("sysEndPointMethod", "sysAudit_sys_endpoint_method")
+      .withColumnRenamed("sysEndPointURI", "sysAudit_sys_endpoint_uri")
+      .withColumnRenamed("sysEndPointVersion", "sysAudit_sys_endpoint_version")
+      .withColumnRenamed("sysTxDateStamp", "sysAudit_sys_tx_date_stamp")
+      .withColumnRenamed("sysRequestReference", "sysAudit_sys_request_reference")
+      .withColumn("f_name", QueryData.myFileName(input_file_name()))
+      .select($"f_name".as("source_reference"), $"*").drop("f_name")
+
+
+    //    data_rename =data.withColumn("hello",when(col("objectClass").isNotNull,data("objectClass"))
+    //      .when(col("objectId").isNotNull,data("objectId")))
+  }
+}
