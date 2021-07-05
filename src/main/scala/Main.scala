@@ -5,18 +5,21 @@ import org.apache.spark.sql.types.StringType
 object Main {
   val spark : SparkSession = SparkSession.builder().getOrCreate()
   import spark.implicits._
-  
-  def main(): Unit = {
-    val ign = "C:\\Users\\shour\\Desktop\\Whiteklay\\DeequTest\\"
-    val original_data : DataFrame = spark.read.schema(SchemaData.jsonSourceSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\data\\*.json")
 
-    val renamedData : DataFrame = RenameData.dataRenamed(original_data)
+  def main() = {
+
+    val ign = "C:\\Users\\shour\\Desktop\\Whiteklay\\DeequTest\\"
+    println("reading data")
+    val original_data = spark.read.schema(SchemaData.jsonSourceSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\data\\*.json")
+
+    val renamedData = RenameData.dataRenamed(original_data)
 
     val dataAnalyser : DataFrame = Deequ.analyser(renamedData)
     val dataVerification : DataFrame = Deequ.verification(renamedData)
 
     val data_f : DataFrame = FailedData.failedObjectClass(renamedData)
 
+    println("processing agreement")
     var agreement = QueryData.dataFilter(renamedData,Array("io.ignatica.insurance.models.Agreement"))
     agreement = agreement.select(DataArrays.agreementColumns.map(m=>col(m)):_*)
     val verifyAgreement = Deequ.verificationColumns("agreement",agreement,DataArrays.agreementColumns.toSeq)
@@ -25,6 +28,7 @@ object Main {
 
 
     // Processing Agreement Component
+    println("processing agreement Component")
     var agreementComponent = QueryData.dataFilter(renamedData,Array("io.ignatica.insurance.models.AgreementComponent"))
     val agreementContact = ContactBuilder.getContact(agreementComponent)
 
@@ -34,6 +38,7 @@ object Main {
 
     // Processing Coverage
     //
+    println("processing coverages")
     val Coverages = QueryData.dataFilter(renamedData,Array("io.ignatica.insurtech.model.Coverage","io.ignatica.models.Coverage","io.ignatica.insurance.models.Coverage"))
     val (basePremiumModifiers,investment_options,coverage_detail,coverageContact,coverage_df) = CoverageBuilder.buildCoverage(Coverages)
 
@@ -47,6 +52,7 @@ object Main {
 
     // Processing Holding-Account
     //
+    println("processing holding account")
     val HoldingAccount = QueryData.dataFilter(renamedData,Array("io.ignatica.insurance.models.HoldingAccount"))
     var (holdingAccountGeneric,holdingAccountPaid,pendingTransaction,holdingAccountFund) = HoldingAccountBuilder.buildHoldingAccount(HoldingAccount)
 
@@ -62,6 +68,7 @@ object Main {
 
     // Processing Holding-Account-Paid-To-Date
     //
+    println("processing holding account paid")
     val verifyHoldingAccountPaid = Deequ.verificationColumns("holdingaccountpaid",
       holdingAccountPaid,
       holdingAccountPaid.drop("transaction_type").columns.toSeq)
@@ -69,6 +76,7 @@ object Main {
 
     // Processing Holding-Account-Fund
     //
+    println("processing holding account fund")
     holdingAccountFund = holdingAccountFund.withColumn("pendingTransactions",$"pendingTransactions".cast(StringType))
     val verifyHoldingAccountFund = Deequ.verificationColumns("holdingaccountfund",
       holdingAccountFund,
@@ -77,6 +85,9 @@ object Main {
     val HAF_failed = FailedData.failedEntries(holdingAccountFund.drop("currency_code"))
     holdingAccountFund = holdingAccountFund.drop("pendingTransactions")
 
+    // Deequ Verified
+    //
+    println("merging deequ verified dataframes")
     var dataVerified = dataVerification.union(verifyAgreement)
     val verifiedDfs = Array(verifyAgreementComponent,
       verifyCoverage,
@@ -87,8 +98,12 @@ object Main {
     for (y <- verifiedDfs){
       dataVerified = dataVerified.union(y)
     }
+    dataVerified = dataVerified.withColumn("t",current_timestamp())
+    dataVerified = dataVerified.select($"t".as("system_timestamp"),$"*").drop("t")
 
 
+    // Failed Data
+    //
     var data_failed = data_f.union(agreement_failed)
     val failedDfs = Array(agreementComponent_failed,Coverages_failed,HA_failed,HAP_failed,HAF_failed)
     for(y <- failedDfs){
@@ -97,7 +112,7 @@ object Main {
     data_failed = data_failed.withColumn("t",current_timestamp())
     data_failed = data_failed.select($"t".as("system_timestamp"),$"*").drop("t")
 
-
+    println("creating audit tables")
     var data_count = Seq(1).toDF("seq")
     data_count = data_count
       .withColumn("system_timestamp",current_timestamp())
@@ -142,6 +157,7 @@ object Main {
 
 
 //  if (g.status != CheckStatus.Success) {
+
 //    holdingAccountFund = holdingAccountFund.withColumn("issue", lit("Incorrect or missing Column"))
 //  }
 //  ////    .write.format("orc").mode("append").saveAsTable("bad_records")

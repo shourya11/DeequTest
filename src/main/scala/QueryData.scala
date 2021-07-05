@@ -1,8 +1,9 @@
-import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.sql.functions.{to_json, udf}
+import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
+import org.apache.spark.sql.functions.{current_timestamp, to_json, udf}
+
 import java.text.SimpleDateFormat
 import java.sql.Timestamp
-import scala.util.{Try, Success, Failure}
+import scala.util.{Failure, Success, Try}
 
 object QueryData {
   val spark = SparkSession.builder().getOrCreate()

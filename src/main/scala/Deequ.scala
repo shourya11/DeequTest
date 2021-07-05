@@ -3,8 +3,9 @@ import com.amazon.deequ.{VerificationResult, VerificationSuite}
 import com.amazon.deequ.analyzers.{Completeness, Correlation, Distinctness, Size}
 import com.amazon.deequ.analyzers.runners.{AnalysisRunner, AnalyzerContext}
 import com.amazon.deequ.analyzers.runners.AnalyzerContext.successMetricsAsDataFrame
-import com.amazon.deequ.checks.{Check, CheckLevel, CheckWithLastConstraintFilterable}
+import com.amazon.deequ.checks.{Check, CheckLevel}
 import org.apache.spark.sql.{DataFrame, SparkSession}
+
 
 object Deequ {
   val spark : SparkSession = SparkSession.builder().getOrCreate()
@@ -45,5 +46,4 @@ object Deequ {
     checkResultsAsDataFrame(spark, verificationResult)
 
   }
-
 }
