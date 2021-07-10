@@ -6,6 +6,7 @@ object FailedData {
   val spark = SparkSession.builder().getOrCreate()
   import spark.implicits._
 
+
   def failedObjectClass(df:DataFrame): DataFrame = {
     df.filter(!$"object_class".isin(DataArrays.object_classArray:_*) || $"object_class".isNull)
       .withColumn("issue",QueryData.inc2($"object_class"))

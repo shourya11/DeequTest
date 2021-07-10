@@ -6,6 +6,8 @@ import com.amazon.deequ.repository.ResultKey
 import com.amazon.deequ.repository.memory.InMemoryMetricsRepository
 import org.apache.spark.sql.SparkSession
 
+//to do source_reference
+
 object Anomaly {
 
 
@@ -38,7 +40,7 @@ object Anomaly {
       Sum("_5")
     )
     .addAnomalyCheck(
-      RelativeRateOfChangeStrategy(maxRateIncrease = Some(1.0)),
+      RelativeRateOfChangeStrategy(maxRateIncrease = Some(2.0)),
       MaxLength("_2")
     )
     .addAnomalyCheck(
@@ -77,7 +79,7 @@ object Anomaly {
       Sum("_5")
     )
     .addAnomalyCheck(
-      RelativeRateOfChangeStrategy(maxRateIncrease = Some(1.0)),
+      RelativeRateOfChangeStrategy(maxRateIncrease = Some(2.0)),
       MaxLength("_2")
     )
     .addAnomalyCheck(
@@ -86,7 +88,8 @@ object Anomaly {
     )
     .run()
 
-    print(verificationResult)
+  println("")
+  print(verificationResult)
     println("")
 
   if (verificationResult.status != Success) {

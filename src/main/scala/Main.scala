@@ -14,10 +14,10 @@ object Main {
 
     val renamedData = RenameData.dataRenamed(original_data)
 
-    val dataAnalyser : DataFrame = Deequ.analyser(renamedData)
-    val dataVerification : DataFrame = Deequ.verification(renamedData)
+    val dataAnalyser = Deequ.analyser(renamedData)
+    val dataVerification = Deequ.verification(renamedData)
 
-    val data_f : DataFrame = FailedData.failedObjectClass(renamedData)
+    val data_f = FailedData.failedObjectClass(renamedData)
 
     println("processing agreement")
     var agreement = QueryData.dataFilter(renamedData,Array("io.ignatica.insurance.models.Agreement"))
@@ -101,7 +101,7 @@ object Main {
     dataVerified = dataVerified.withColumn("t",current_timestamp())
     dataVerified = dataVerified.select($"t".as("system_timestamp"),$"*").drop("t")
 
-
+//
     // Failed Data
     //
     var data_failed = data_f.union(agreement_failed)

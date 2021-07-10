@@ -2,7 +2,7 @@ import org.apache.spark.sql.types.{ArrayType, DoubleType, MapType, StringType, S
 
 object SchemaData {
   val sysAuditSchema = new StructType().add("objectClass", StringType,nullable = true)
-    .add("objectId", StringType,nullable = true)
+//    .add("objectId", StringType,nullable = true)
     .add("sysEndPointMethod",StringType,nullable = true)
     .add("sysEndPointURI",StringType,nullable = true)
     .add("sysEndPointVersion",StringType,nullable = true)
