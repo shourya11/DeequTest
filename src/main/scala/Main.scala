@@ -10,6 +10,7 @@ object Main {
 
     val ign = "C:\\Users\\shour\\Desktop\\Whiteklay\\DeequTest\\"
     println("reading data")
+
     val original_data = spark.read.schema(SchemaData.jsonSourceSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\data\\*.json")
 
     val renamedData = RenameData.dataRenamed(original_data)
@@ -20,6 +21,7 @@ object Main {
     val data_f = FailedData.failedObjectClass(renamedData)
 
     println("processing agreement")
+
     var agreement = QueryData.dataFilter(renamedData,Array("io.ignatica.insurance.models.Agreement"))
     agreement = agreement.select(DataArrays.agreementColumns.map(m=>col(m)):_*)
     val verifyAgreement = Deequ.verificationColumns("agreement",agreement,DataArrays.agreementColumns.toSeq)
@@ -29,6 +31,7 @@ object Main {
 
     // Processing Agreement Component
     println("processing agreement Component")
+
     var agreementComponent = QueryData.dataFilter(renamedData,Array("io.ignatica.insurance.models.AgreementComponent"))
     val agreementContact = ContactBuilder.getContact(agreementComponent)
 
@@ -39,6 +42,7 @@ object Main {
     // Processing Coverage
     //
     println("processing coverages")
+
     val Coverages = QueryData.dataFilter(renamedData,Array("io.ignatica.insurtech.model.Coverage","io.ignatica.models.Coverage","io.ignatica.insurance.models.Coverage"))
     val (basePremiumModifiers,investment_options,coverage_detail,coverageContact,coverage_df) = CoverageBuilder.buildCoverage(Coverages)
 
@@ -53,6 +57,7 @@ object Main {
     // Processing Holding-Account
     //
     println("processing holding account")
+
     val HoldingAccount = QueryData.dataFilter(renamedData,Array("io.ignatica.insurance.models.HoldingAccount"))
     var (holdingAccountGeneric,holdingAccountPaid,pendingTransaction,holdingAccountFund) = HoldingAccountBuilder.buildHoldingAccount(HoldingAccount)
 
@@ -69,6 +74,7 @@ object Main {
     // Processing Holding-Account-Paid-To-Date
     //
     println("processing holding account paid")
+
     val verifyHoldingAccountPaid = Deequ.verificationColumns("holdingaccountpaid",
       holdingAccountPaid,
       holdingAccountPaid.drop("transaction_type").columns.toSeq)
@@ -77,6 +83,7 @@ object Main {
     // Processing Holding-Account-Fund
     //
     println("processing holding account fund")
+
     holdingAccountFund = holdingAccountFund.withColumn("pendingTransactions",$"pendingTransactions".cast(StringType))
     val verifyHoldingAccountFund = Deequ.verificationColumns("holdingaccountfund",
       holdingAccountFund,
@@ -88,6 +95,7 @@ object Main {
     // Deequ Verified
     //
     println("merging deequ verified dataframes")
+
     var dataVerified = dataVerification.union(verifyAgreement)
     val verifiedDfs = Array(verifyAgreementComponent,
       verifyCoverage,
@@ -113,6 +121,7 @@ object Main {
     data_failed = data_failed.select($"t".as("system_timestamp"),$"*").drop("t")
 
     println("creating audit tables")
+
     var data_count = Seq(1).toDF("seq")
     data_count = data_count
       .withColumn("system_timestamp",current_timestamp())
@@ -150,10 +159,22 @@ object Main {
 
     dfs.foreach {
       case (df, format) => if (!df.isEmpty) {
-        df.distinct().repartition(1).write.format("csv").option("header",value = true).mode("overwrite").save(format)
+        df.distinct().repartition(1).write.format("csv").option("header",value = true).mode("append").save(format)
       }
     }
-    print("ran successfully")
+
+    println("moving files")
+    val jsonFiles = renamedData.select($"source_reference").collect().map(_.getString(0))
+    QueryData.move_files(jsonFiles,"C:\\Users\\shour\\Desktop\\Whiteklay\\data\\","C:\\Users\\shour\\Desktop\\Whiteklay\\data_moved\\")
+
+
+    val temp_data = spark.read.schema(SchemaData.jsonSourceSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\data\\*.json")
+    val renamedData2 = RenameData.dataRenamed(temp_data)
+    val jsonFiles2 = renamedData2.select($"source_reference").collect().map(_.getString(0))
+    QueryData.move_files(jsonFiles2,"C:\\Users\\shour\\Desktop\\Whiteklay\\temp_data\\","C:\\Users\\shour\\Desktop\\Whiteklay\\data\\")
+    println("moved other files")
+
+    println("ran successfully")
 
 
 //  if (g.status != CheckStatus.Success) {

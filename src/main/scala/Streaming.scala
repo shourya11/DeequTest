@@ -61,7 +61,7 @@ object Streaming {
 
       renamedData
         .writeStream
-        .trigger(Trigger.Once())
+//        .trigger(Trigger.Once())
         .foreachBatch { (batchDF: DataFrame, batchId: Long) =>
           // reassign our current state to the previous next state
           val stateStoreCurr = stateStoreNext
@@ -102,12 +102,12 @@ object Streaming {
           // write the current results into the metrics table
           metric_results.write.format("parquet").mode("Overwrite").saveAsTable("deequ_metrics")
 
+          Main.main()
 
         }
         .start()
         .awaitTermination()
 
-  Main.main()
 
 //  val batchCounts = spark.read.format("parquet").table("bad_records")
 ////    .groupBy($"batchId").count()

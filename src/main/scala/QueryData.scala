@@ -1,3 +1,4 @@
+import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
 import org.apache.spark.sql.functions.{current_timestamp, to_json, udf}
 
@@ -30,7 +31,21 @@ object QueryData {
       }
     }
   }
-
   val getTimestampWithMilisUDF = udf(getTimestampWithMilis)
+
+  def move_files(fileName:Array[String], fromLocation:String, toLocation:String): Unit = {
+    val conf = spark.sparkContext.hadoopConfiguration
+    val fs = FileSystem.get(conf)
+    try {
+      for (e <- fileName.indices){
+        var file_source = new Path(fromLocation + "/" + fileName(e))
+
+        var file_target = new Path(toLocation + fileName(e))
+        fs.rename(file_source, file_target)
+      }
+    } catch {
+      case e: Exception => println(e); println("Exception moving files between folders")
+    }
+  }
 
 }
