@@ -6,7 +6,7 @@ import com.amazon.deequ.VerificationResult.checkResultsAsDataFrame
 import com.amazon.deequ.checks.{Check, CheckLevel, CheckStatus}
 import com.amazon.deequ.analyzers.runners.AnalysisRunner
 import com.amazon.deequ.analyzers.runners.AnalyzerContext.successMetricsAsDataFrame
-import com.amazon.deequ.analyzers.{Analysis, ApproxCountDistinct, Completeness, Compliance, Distinctness, InMemoryStateProvider, Size}
+import com.amazon.deequ.analyzers.{Analysis, ApproxCountDistinct, Completeness, Compliance, Distinctness, InMemoryStateProvider, MaxLength, Size}
 
 object Streaming {
   val spark : SparkSession = SparkSession.builder().getOrCreate()
@@ -31,6 +31,8 @@ object Streaming {
       .addAnalyzer(Completeness("object_class"))
       .addAnalyzer(Completeness("agreement_number"))
       .addAnalyzer(Completeness("sysAudit_object_class"))
+      .addAnalyzer(MaxLength("object_class"))
+
 
     val stateStoreCurr = InMemoryStateProvider()
     val stateStoreNext = InMemoryStateProvider()
@@ -54,6 +56,7 @@ object Streaming {
 
     val original_data = spark.readStream
       .schema(SchemaData.jsonSourceSchema)
+      .option("maxFilesPerTrigger",20)
       .format("json")
       .load("C:\\Users\\shour\\Desktop\\Whiteklay\\data\\*.json")
 
@@ -61,6 +64,7 @@ object Streaming {
 
       renamedData
         .writeStream
+//        .outputMode("update")
 //        .trigger(Trigger.Once())
         .foreachBatch { (batchDF: DataFrame, batchId: Long) =>
           // reassign our current state to the previous next state
@@ -91,18 +95,18 @@ object Streaming {
               x.write.format("parquet").mode("overwrite").saveAsTable("bad_records")
               x.show()
           }
-          val dataVerification = Deequ.verification(renamedData)
+//          val dataVerification = Deequ.verification(renamedData)
 
-          // get the current metrics as a dataframe
+
           val metric_results = successMetricsAsDataFrame(spark, metricsResult)
             .withColumn("ts", current_timestamp())
 
           metric_results.show()
 
-          // write the current results into the metrics table
           metric_results.write.format("parquet").mode("Overwrite").saveAsTable("deequ_metrics")
 
-          Main.main()
+//          Main.main()
+          println("back in streaming")
 
         }
         .start()
@@ -110,13 +114,10 @@ object Streaming {
 
 
 //  val batchCounts = spark.read.format("parquet").table("bad_records")
-////    .groupBy($"batchId").count()
+//    .groupBy($"batchId").count()
 //  batchCounts.printSchema()
-//
-//  batchCounts.show()
 
+}
 
-  }
-//}
 
 

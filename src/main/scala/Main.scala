@@ -1,3 +1,5 @@
+import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.{SparkSession, _}
 import org.apache.spark.sql.functions.{col, current_timestamp, lit}
 import org.apache.spark.sql.types.StringType
@@ -14,6 +16,10 @@ object Main {
     val original_data = spark.read.schema(SchemaData.jsonSourceSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\data\\*.json")
 
     val renamedData = RenameData.dataRenamed(original_data)
+
+//    val sparkConf = new SparkConf()
+//    val sc = new SparkContext(sparkConf)
+
 
     val dataAnalyser = Deequ.analyser(renamedData)
     val dataVerification = Deequ.verification(renamedData)
@@ -167,12 +173,19 @@ object Main {
     val jsonFiles = renamedData.select($"source_reference").collect().map(_.getString(0))
     QueryData.move_files(jsonFiles,"C:\\Users\\shour\\Desktop\\Whiteklay\\data\\","C:\\Users\\shour\\Desktop\\Whiteklay\\data_moved\\")
 
+//    val fs = FileSystem.get(spark.sparkContext.hadoopConfiguration)
+//    val fileExists = fs.exists(new Path("C:\\Users\\shour\\Desktop\\Whiteklay\\temp_data\\*.json"))
 
-    val temp_data = spark.read.schema(SchemaData.jsonSourceSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\data\\*.json")
-    val renamedData2 = RenameData.dataRenamed(temp_data)
-    val jsonFiles2 = renamedData2.select($"source_reference").collect().map(_.getString(0))
-    QueryData.move_files(jsonFiles2,"C:\\Users\\shour\\Desktop\\Whiteklay\\temp_data\\","C:\\Users\\shour\\Desktop\\Whiteklay\\data\\")
-    println("moved other files")
+//    if (fileExists) {
+//      val temp_data = spark.read.schema(SchemaData.jsonSourceSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\temp_data\\*.json")
+//      val renamedData2 = RenameData.dataRenamed(temp_data)
+//      val jsonFiles2 = renamedData2.select($"source_reference").collect().map(_.getString(0))
+//      QueryData.move_files(jsonFiles2, "C:\\Users\\shour\\Desktop\\Whiteklay\\temp_data\\", "C:\\Users\\shour\\Desktop\\Whiteklay\\data\\")
+//      println("moved other files")
+//    }
+//    else {
+//      println("no files")
+//    }
 
     println("ran successfully")
 

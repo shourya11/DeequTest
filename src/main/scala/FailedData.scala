@@ -9,7 +9,7 @@ object FailedData {
 
   def failedObjectClass(df:DataFrame): DataFrame = {
     df.filter(!$"object_class".isin(DataArrays.object_classArray:_*) || $"object_class".isNull)
-      .withColumn("issue",QueryData.inc2($"object_class"))
+      .withColumn("issue",lit("Incorrect or Missing ObjectClass"))
       .withColumn("account_name",$"payload.accountName")
       .select(DataArrays.failedColumns.map(m=>col(m)):_*)
       .withColumn("payload",to_json($"payload"))
