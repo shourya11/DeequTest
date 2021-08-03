@@ -32,6 +32,9 @@ object Streaming {
       .addAnalyzer(Completeness("agreement_number"))
       .addAnalyzer(Completeness("sysAudit_object_class"))
       .addAnalyzer(MaxLength("object_class"))
+      .addAnalyzer(Compliance("o",""))
+//      .addAnalyzers(Seq(Completeness("object_class")
+//      ))
 
 
     val stateStoreCurr = InMemoryStateProvider()
