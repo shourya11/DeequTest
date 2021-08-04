@@ -15,13 +15,6 @@ object DeequGeneric {
   val spark : SparkSession = SparkSession.builder().getOrCreate()
   import spark.implicits._
 
-//  var dataSeq = Seq[Analyzer[_,Metric[_]]]()
-  var dataSeq = Seq[Any]()
-  var arr = Array[(Any,Any,Any)]()
-  var i = 0
-  var j = 0
-
-
   val Schema = new StructType().add("Deequ", new StructType().add("Analysers", ArrayType(new StructType()
     .add("function",StringType,nullable = true)
     .add("columnName",StringType,nullable = true)
@@ -33,48 +26,12 @@ object DeequGeneric {
 
   val dataCollected = data.collect()
 
-//  function columnName condition
-
-  def AnalyzerSeq(x: Array[org.apache.spark.sql.Row]) = {
-    for (i <- Range(0,x.length)){
-      if (x(i).get(1) == null){
-        arr = arr :+ (x(i).get(0).toString,null,null)
-
-      }
-      else if (x(i).get(2) == null ){
-        arr = arr :+ (x(i).get(0).toString,x(i).get(1).toString,null)
-      }
-      else {
-        arr = arr :+ (x(i).get(0).toString,x(i).get(1).toString,x(i).get(2).toString)
-      }
-    }
-    arr
-  }
-
-//  val ign = "C:\\Users\\shour\\Desktop\\Whiteklay\\DeequTest\\"
-
   println("transforming ingested json")
 
   //  var b = AnalysisRunner.onData()
-  var b = Analysis()
-  var analysers = AnalyzerSeq(dataCollected)
-  analysers.foreach{
-    case ("Size",null,null) => {
-      b = b.addAnalyzer(Size())
-    }
-      case("Completeness",str,null) => {
-        b  = b.addAnalyzer(Completeness(str.toString))
-      }
-    case("MaxLength",str,null) => {
-      b  = b.addAnalyzer(MaxLength(str.toString))
-    }
-    case("Compliance",str,str2) => {
-      b  = b.addAnalyzer(Compliance(str.toString,str2.toString))
-    }
-    case _ => "invalid"
-  }
 
-  println(b)
+  var analysers = DeequSeq.AnalyzerArr(dataCollected)
+  var b = DeequSeq.AnalyzerSeq(analysers)
 
   var base_df = spark.read.schema(SchemaData.jsonSourceSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\data\\*.json")
   val empty_df = base_df.where("0 = 1")
@@ -100,12 +57,13 @@ object DeequGeneric {
 
   val renamedData = RenameData.dataRenamed(original_data)
 
+  //  Check(CheckLevel.Error,"deded").areComplete(Seq("njdej"))
+
   renamedData
     .writeStream
     //        .outputMode("update")
     //        .trigger(Trigger.Once())
     .foreachBatch { (batchDF: DataFrame, batchId: Long) =>
-      // reassign our current state to the previous next state
       val stateStoreCurr = stateStoreNext
 
       // run our analysis on the current batch, aggregate with saved state
@@ -115,17 +73,30 @@ object DeequGeneric {
         aggregateWith = Some(stateStoreCurr),
         saveStatesWith = Some(stateStoreNext))
 
-      val verificationResult = VerificationSuite()
-        .onData(batchDF)
-        .addCheck(
-          Check(CheckLevel.Error, "objectClass check")
-            .isContainedIn("object_class", DataArrays.object_classArray)
-        )
-        .addCheck(
-          Check(CheckLevel.Error, "agreementNumber check")
-            .areComplete(Seq("agreement_number"))
-        )
-        .run()
+        val verificationResult = VerificationSuite()
+          .onData(batchDF)
+          .addChecks(
+            Seq(
+              Check(CheckLevel.Error, "objectClass check")
+                .isContainedIn("object_class", DataArrays.object_classArray)
+              ,
+              Check(CheckLevel.Error, "agreement number check")
+                .areComplete(Seq("agreement_number"))
+            )
+          )
+          .run()
+
+      //      val verificationResult = VerificationSuite()
+      //        .onData(batchDF)
+      //        .addCheck(
+      //          Check(CheckLevel.Error, "objectClass check")
+      //            .isContainedIn("object_class", DataArrays.object_classArray)
+      //        )
+      //        .addCheck(
+      //          Check(CheckLevel.Error, "agreementNumber check")
+      //            .areComplete(Seq("agreement_number"))
+      //        )
+      //        .run()
 
       val x = checkResultsAsDataFrame(spark, verificationResult)
 
@@ -133,8 +104,6 @@ object DeequGeneric {
         x.write.format("parquet").mode("overwrite").saveAsTable("bad_records")
         x.show()
       }
-      //          val dataVerification = Deequ.verification(renamedData)
-
 
       val metric_results = successMetricsAsDataFrame(spark, metricsResult)
         .withColumn("ts", current_timestamp())
@@ -149,32 +118,4 @@ object DeequGeneric {
     }
     .start()
     .awaitTermination()
-
-
-  //  val dfs = Array((ign, "agreement")
-//  )
-//
-//  analysers.foreach{
-//    case (doj,format) => if(1 == 2){
-//
-//    }
-//  }
-
-  //      val analysis = Analysis()
-  //        .addAnalyzers(AnalyzerSeq(dataCollected))
-  ////        .addAnalyzers(rtty(""))
-
-//  val analysis2 = Analysis()
-//    .addAnalyzer(Size())
-//    .addAnalyzer(Completeness("agreement_number"))
-//    .addAnalyzer(MaxLength("object_class"))
-//
-//  //  println(analysis)
-//  println(analysis2)
-//
-//  //  println(analysis.getClass)
-//  println("\n")
-//  println(analysis2.getClass)
-
-
 }
