@@ -8,6 +8,7 @@ import com.amazon.deequ.checks.{Check, CheckLevel, CheckStatus}
 import com.amazon.deequ.metrics.Metric
 import org.apache.spark.sql.{SparkSession, _}
 import org.apache.spark.sql.functions.{col, current_timestamp, explode, lit}
+import org.apache.spark.sql.streaming.Trigger
 import org.apache.spark.sql.types.StringType
 
 object DeequGeneric {
@@ -24,6 +25,8 @@ object DeequGeneric {
   var data = spark.read.option("multiLine","true").schema(Schema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\inputJson.json")
     .select(explode($"Deequ.Analysers").as("Analysers")).select($"Analysers.*")
 
+  data.show()
+
   val dataCollected = data.collect()
 
   println("transforming ingested json")
@@ -32,7 +35,12 @@ object DeequGeneric {
 
   var analysers = DeequSeq.AnalyzerArr(dataCollected)
   var b = DeequSeq.AnalyzerSeq(analysers)
+  println(b)
 
+//  println("ana" + analysers)
+//  println()
+//  print("hehe" + b)
+//
   var base_df = spark.read.schema(SchemaData.jsonSourceSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\data\\*.json")
   val empty_df = base_df.where("0 = 1")
   val l1: Long = 0
@@ -51,7 +59,7 @@ object DeequGeneric {
   println("reading data")
   val original_data = spark.readStream
     .schema(SchemaData.jsonSourceSchema)
-    .option("maxFilesPerTrigger",20)
+//    .option("maxFilesPerTrigger",20)
     .format("json")
     .load("C:\\Users\\shour\\Desktop\\Whiteklay\\data\\*.json")
 
@@ -62,7 +70,7 @@ object DeequGeneric {
   renamedData
     .writeStream
     //        .outputMode("update")
-    //        .trigger(Trigger.Once())
+    .trigger(Trigger.Once())
     .foreachBatch { (batchDF: DataFrame, batchId: Long) =>
       val stateStoreCurr = stateStoreNext
 
