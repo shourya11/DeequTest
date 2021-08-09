@@ -36,6 +36,7 @@ object Main {
 
 //  var DestPath = data.select($"Destination.*").select($"Path").head().toString
 //  DestPath = DestPath.substring(1, DestPath.length()-1)
+  //add destination when needed in the json
 
   var Format = data.select($"Source.*").select($"Format").head().toString
   Format = Format.substring(1, Format.length()-1)
