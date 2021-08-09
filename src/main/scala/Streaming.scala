@@ -12,9 +12,9 @@ object Streaming {
   val spark : SparkSession = SparkSession.builder().getOrCreate()
   import spark.implicits._
 
-//  def main(): Unit = {
+  def run(Format:String,Path:String,b:Analysis): Unit = {
 
-    var base_df = spark.read.schema(SchemaData.jsonSourceSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\data\\*.json")
+    var base_df = spark.read.schema(SchemaData.jsonSourceSchema).format(Format).load(Path)
     val empty_df = base_df.where("0 = 1")
     val l1: Long = 0
 
@@ -24,102 +24,87 @@ object Streaming {
 
     base_df.createOrReplaceTempView("trades_historical")
     empty_df.write.format("parquet").saveAsTable("trades_delta")
-    empty_df.withColumn("batchID",lit(l1)).write.format("parquet").saveAsTable("bad_records")
-
-    val analysis = Analysis()
-      .addAnalyzer(Size())
-      .addAnalyzer(Completeness("object_class"))
-      .addAnalyzer(Completeness("agreement_number"))
-      .addAnalyzer(Completeness("sysAudit_object_class"))
-      .addAnalyzer(MaxLength("object_class"))
-      .addAnalyzer(Compliance("o",""))
-//      .addAnalyzers(Seq(Completeness("object_class")
-//      ))
-
+    empty_df.withColumn("batchID", lit(l1)).write.format("parquet").saveAsTable("bad_records")
 
     val stateStoreCurr = InMemoryStateProvider()
     val stateStoreNext = InMemoryStateProvider()
 
-//  val x = spark.readStream
-//    .schema(SchemaData.jsonSourceSchema)
-//    .format("json")
-//    .load("C:\\Users\\shour\\Desktop\\Whiteklay\\data\\*.json")
-//
-//    RenameData.dataRenamed(x)
-//      .repartition(1)
-//      .writeStream.format("parquet")
-//      .option("failOnDataLoss", "false")
-//      .option("checkpointLocation", "/checkpoint")
-//      .format("parquet")
-//      .outputMode("append")
-//      .trigger(Trigger.Once())
-//      .option("path","C:\\Users\\shour\\Desktop\\Whiteklay\\tables")
-//      .start()
-//      .awaitTermination()
+    println("reading data")
 
     val original_data = spark.readStream
       .schema(SchemaData.jsonSourceSchema)
-      .option("maxFilesPerTrigger",20)
-      .format("json")
-      .load("C:\\Users\\shour\\Desktop\\Whiteklay\\data\\*.json")
+      //    .option("maxFilesPerTrigger",20)
+      .format(Format)
+      .load(Path)
 
     val renamedData = RenameData.dataRenamed(original_data)
 
-      renamedData
-        .writeStream
-//        .outputMode("update")
-//        .trigger(Trigger.Once())
-        .foreachBatch { (batchDF: DataFrame, batchId: Long) =>
-          // reassign our current state to the previous next state
-          val stateStoreCurr = stateStoreNext
+    //  Check(CheckLevel.Error,"deded").areComplete(Seq("njdej"))
 
-          // run our analysis on the current batch, aggregate with saved state
-          val metricsResult = AnalysisRunner.run(
-            data = batchDF,
-            analysis = analysis,
-            aggregateWith = Some(stateStoreCurr),
-            saveStatesWith = Some(stateStoreNext))
+    renamedData
+      .writeStream
+      //        .outputMode("update")
+      .trigger(Trigger.Once())
+      .foreachBatch { (batchDF: DataFrame, batchId: Long) =>
+        val stateStoreCurr = stateStoreNext
 
-          val verificationResult = VerificationSuite()
-            .onData(batchDF)
-            .addCheck(
+        // run our analysis on the current batch, aggregate with saved state
+        val metricsResult = AnalysisRunner.run(
+          data = batchDF,
+          analysis = b,
+          aggregateWith = Some(stateStoreCurr),
+          saveStatesWith = Some(stateStoreNext))
+
+        val verificationResult = VerificationSuite()
+          .onData(batchDF)
+          .addChecks(
+            Seq(
               Check(CheckLevel.Error, "objectClass check")
                 .isContainedIn("object_class", DataArrays.object_classArray)
-            )
-            .addCheck(
-              Check(CheckLevel.Error, "agreementNumber check")
+              ,
+              Check(CheckLevel.Error, "agreement number check")
                 .areComplete(Seq("agreement_number"))
             )
-            .run()
+          )
+          .run()
 
-          val x = checkResultsAsDataFrame(spark, verificationResult)
+        //      val verificationResult = VerificationSuite()
+        //        .onData(batchDF)
+        //        .addCheck(
+        //          Check(CheckLevel.Error, "objectClass check")
+        //            .isContainedIn("object_class", DataArrays.object_classArray)
+        //        )
+        //        .addCheck(
+        //          Check(CheckLevel.Error, "agreementNumber check")
+        //            .areComplete(Seq("agreement_number"))
+        //        )
+        //        .run()
 
-          if (verificationResult.status != CheckStatus.Success) {
-              x.write.format("parquet").mode("overwrite").saveAsTable("bad_records")
-              x.show()
-          }
-//          val dataVerification = Deequ.verification(renamedData)
+        val x = checkResultsAsDataFrame(spark, verificationResult)
 
-
-          val metric_results = successMetricsAsDataFrame(spark, metricsResult)
-            .withColumn("ts", current_timestamp())
-
-          metric_results.show()
-
-          metric_results.write.format("parquet").mode("Overwrite").saveAsTable("deequ_metrics")
-
-//          Main.main()
-          println("back in streaming")
-
+        if (verificationResult.status != CheckStatus.Success) {
+          x.write.format("parquet").mode("overwrite").saveAsTable("bad_records")
+          x.show()
         }
-        .start()
-        .awaitTermination()
 
+        val metric_results = successMetricsAsDataFrame(spark, metricsResult)
+          .withColumn("ts", current_timestamp())
 
-//  val batchCounts = spark.read.format("parquet").table("bad_records")
-//    .groupBy($"batchId").count()
-//  batchCounts.printSchema()
+        metric_results.show()
 
+        metric_results.write.format("parquet").mode("Overwrite").saveAsTable("deequ_metrics")
+
+        //          Main.main()
+        println("back in streaming")
+
+      }
+      .start()
+      .awaitTermination()
+
+    //  val batchCounts = spark.read.format("parquet").table("bad_records")
+    //    .groupBy($"batchId").count()
+    //  batchCounts.printSchema()
+  }
 }
 
 
