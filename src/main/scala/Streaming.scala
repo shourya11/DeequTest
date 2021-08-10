@@ -6,13 +6,13 @@ import com.amazon.deequ.VerificationResult.checkResultsAsDataFrame
 import com.amazon.deequ.checks.{Check, CheckLevel, CheckStatus}
 import com.amazon.deequ.analyzers.runners.AnalysisRunner
 import com.amazon.deequ.analyzers.runners.AnalyzerContext.successMetricsAsDataFrame
-import com.amazon.deequ.analyzers.{Analysis, ApproxCountDistinct, Completeness, Compliance, Distinctness, InMemoryStateProvider, MaxLength, Size}
+import com.amazon.deequ.analyzers._
 
 object Streaming {
   val spark : SparkSession = SparkSession.builder().getOrCreate()
   import spark.implicits._
 
-  def run(Format:String,Path:String,b:Analysis): Unit = {
+  def run(Format:String,Path:String,analysers:Analysis): Unit = {
 
     var base_df = spark.read.schema(SchemaData.jsonSourceSchema).format(Format).load(Path)
     val empty_df = base_df.where("0 = 1")
@@ -28,6 +28,14 @@ object Streaming {
 
     val stateStoreCurr = InMemoryStateProvider()
     val stateStoreNext = InMemoryStateProvider()
+
+    var asd = Seq[Check]()
+    val y =  Check(CheckLevel.Error, "objectClass check")
+                .isContainedIn("object_class", DataArrays.object_classArray)
+    val z = Check(CheckLevel.Error, "agreementNumber check")
+                .areComplete(Seq("agreement_number"))
+
+    asd = asd :+ y :+ z
 
     println("reading data")
 
@@ -51,20 +59,14 @@ object Streaming {
         // run our analysis on the current batch, aggregate with saved state
         val metricsResult = AnalysisRunner.run(
           data = batchDF,
-          analysis = b,
+          analysis = analysers,
           aggregateWith = Some(stateStoreCurr),
           saveStatesWith = Some(stateStoreNext))
 
         val verificationResult = VerificationSuite()
           .onData(batchDF)
           .addChecks(
-            Seq(
-              Check(CheckLevel.Error, "objectClass check")
-                .isContainedIn("object_class", DataArrays.object_classArray)
-              ,
-              Check(CheckLevel.Error, "agreement number check")
-                .areComplete(Seq("agreement_number"))
-            )
+            asd
           )
           .run()
 

@@ -8,19 +8,7 @@ object Main {
   val spark : SparkSession = SparkSession.builder().getOrCreate()
   import spark.implicits._
 
-  val Schema = new StructType().add("Deequ", new StructType().add("Analysers", ArrayType(new StructType()
-    .add("function",StringType,nullable = true)
-    .add("columnName",StringType,nullable = true)
-    .add("condition",StringType,nullable = true)
-  )))
-    .add("Source",new StructType()
-      .add("Path",StringType)
-      .add("Format",StringType))
-//    .add("Destination",new StructType()
-//      .add("Path",StringType))
-
-
-  var data = spark.read.option("multiLine","true").schema(Schema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\inputJson.json")
+  var data = spark.read.option("multiLine","true").schema(SchemaData.inputJsonSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\inputJson.json")
 
   data.show()
   var Path = data.select($"Source.*").select($"Path").head().toString
@@ -33,17 +21,36 @@ object Main {
   var Format = data.select($"Source.*").select($"Format").head().toString
   Format = Format.substring(1, Format.length()-1)
 
-  var DeequData = data.select(explode($"Deequ.Analysers").as("Analysers")).select($"Analysers.*")
+  var DeequAnalyzers = data.select(explode($"Deequ.Analysers").as("Analysers")).select($"Analysers.*")
 
-  val dataCollected = DeequData.collect()
+  var DeequChecks = data.select(explode($"Deequ.Checks").as("Checks")).select($"Checks.*")
+
+  val AnalyzersCollected = DeequAnalyzers.collect()
+  val ChecksCollected = DeequChecks.collect()
 
   println("transforming ingested json")
 
   //  var b = AnalysisRunner.onData()
 
-  var analysers = DeequSeq.AnalyzerArr(dataCollected)
-  var b = DeequSeq.AnalyzerSeq(analysers)
-  println(b)
+  var analysers = Analyzers.AnalyzerArr(AnalyzersCollected)
 
-  Streaming.run(Format,Path,b)
+  var checks = Checks.ChecksSeq(ChecksCollected)
+//  println(b)
+
+  Streaming.run(Format,Path,analysers)
 }
+
+
+//def analyser(renamedData: DataFrame): DataFrame = {
+//  val analysis: AnalyzerContext = {
+//    AnalysisRunner.onData(renamedData)
+//      .addAnalyzer(Size())
+//      .addAnalyzer(Distinctness("object_class"))
+//      .addAnalyzer(Completeness("object_class"))
+//      .addAnalyzer(Completeness("agreement_number"))
+//      .addAnalyzer(Completeness("sysAudit_object_class"))
+//      .run()
+//  }
+//  successMetricsAsDataFrame(spark, analysis)
+//
+//}
