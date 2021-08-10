@@ -1,14 +1,6 @@
-import com.amazon.deequ.VerificationResult.checkResultsAsDataFrame
-import com.amazon.deequ.VerificationSuite
 import org.apache.spark.sql.types.{ArrayType, DoubleType, MapType, StringType, StructType}
-import com.amazon.deequ.analyzers.{Analysis, Analyzer, Completeness, Compliance, Distinctness, InMemoryStateProvider, MaxLength, Size}
-import com.amazon.deequ.analyzers.runners.{AnalysisRunner, AnalyzerContext}
-import com.amazon.deequ.analyzers.runners.AnalyzerContext.successMetricsAsDataFrame
-import com.amazon.deequ.checks.{Check, CheckLevel, CheckStatus}
-import com.amazon.deequ.metrics.Metric
 import org.apache.spark.sql.{SparkSession, _}
 import org.apache.spark.sql.functions.{col, current_timestamp, explode, lit}
-import org.apache.spark.sql.streaming.Trigger
 import org.apache.spark.sql.types.StringType
 
 object Main {
