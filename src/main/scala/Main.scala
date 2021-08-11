@@ -1,42 +1,48 @@
-import org.apache.spark.sql.{SparkSession, _}
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.explode
 
 object Main {
 
-  val spark : SparkSession = SparkSession.builder().getOrCreate()
+  val spark: SparkSession = SparkSession.builder().getOrCreate()
+
   import spark.implicits._
 
-  var data = spark.read.option("multiLine","true").schema(SchemaData.inputJsonSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\inputJson.json")
+  def main(args: Array[String]): Unit = {
 
-  data.show()
-  var Path = data.select($"Source.*").select($"Path").head().toString
-  Path = Path.substring(1, Path.length()-1)
+    val data = spark.read.option("multiLine", "true").schema(SchemaData.inputJsonSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\inputJson.json")
+    data.show()
 
-//  var DestPath = data.select($"Destination.*").select($"Path").head().toString
-//  DestPath = DestPath.substring(1, DestPath.length()-1)
-  //add destination when needed in the json
+    var InputPath = data.select($"Source.*").select($"Path").head().toString
+    InputPath = InputPath.substring(1, InputPath.length() - 1)
 
-  var Format = data.select($"Source.*").select($"Format").head().toString
-  Format = Format.substring(1, Format.length()-1)
+    var DestPath = data.select($"Destination.*").select($"Path").head().toString
+    DestPath = DestPath.substring(1, DestPath.length() - 1)
 
-  var DeequAnalyzers = data.select(explode($"Deequ.Analysers").as("Analysers")).select($"Analysers.*")
+    var InputFormat = data.select($"Source.*").select($"Format").head().toString
+    InputFormat = InputFormat.substring(1, InputFormat.length() - 1)
 
-  var DeequChecks = data.select(explode($"Deequ.Checks").as("Checks")).select($"Checks.*")
+    var DestFormat = data.select($"Source.*").select($"Format").head().toString
+    DestFormat = DestFormat.substring(1, InputFormat.length() - 1)
 
-  val AnalyzersCollected = DeequAnalyzers.collect()
-  val ChecksCollected = DeequChecks.collect()
+    val DeequAnalyzers = data.select(explode($"Deequ.Analysers").as("Analysers")).select($"Analysers.*")
 
-  println("transforming ingested json")
+    val DeequChecks = data.select(explode($"Deequ.Checks").as("Checks")).select($"Checks.*")
 
-  //  var b = AnalysisRunner.onData()
+    val AnalyzersCollected = DeequAnalyzers.collect()
+    val ChecksCollected = DeequChecks.collect()
 
-  var analysers = Analyzers.AnalyzerArr(AnalyzersCollected)
+    println("transforming ingested json")
 
-  var checks = Checks.ChecksSeq(ChecksCollected)
-  println(checks)
+    //  var b = AnalysisRunner.onData()
 
+    val analysers = Analyzers.AnalyzerArr(AnalyzersCollected)
 
-  Streaming.run(Format,Path,analysers,checks)
+    val checks = Checks.ChecksSeq(ChecksCollected)
+    println(checks)
+
+    Streaming.run(InputFormat, InputPath, analysers, checks)
+
+  }
 }
 
 

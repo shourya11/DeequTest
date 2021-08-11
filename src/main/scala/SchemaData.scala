@@ -2,11 +2,12 @@ import org.apache.spark.sql.types.{ArrayType, DoubleType, MapType, StringType, S
 
 object SchemaData {
 
-  val inputJsonSchema = new StructType().add("Deequ", new StructType().add("Analysers", ArrayType(new StructType()
-    .add("function",StringType,nullable = true)
-    .add("columnName",StringType,nullable = true)
-    .add("condition",StringType,nullable = true))
-  )
+  val inputJsonSchema = new StructType()
+    .add("Deequ", new StructType().add("Analysers", ArrayType(new StructType()
+      .add("function",StringType,nullable = true)
+      .add("columnName",StringType,nullable = true)
+      .add("condition",StringType,nullable = true))
+    )
     .add("Checks", ArrayType(new StructType()
       .add("checkName",StringType,nullable = true)
       .add("function",StringType,nullable = true)
@@ -16,8 +17,9 @@ object SchemaData {
     .add("Source",new StructType()
       .add("Path",StringType)
       .add("Format",StringType))
-  //    .add("Destination",new StructType()
-  //      .add("Path",StringType))
+    .add("Destination",new StructType()
+      .add("Path",StringType)
+      .add("Format",StringType))
 
   val sysAuditSchema = new StructType().add("objectClass", StringType,nullable = true)
 //    .add("objectId", StringType,nullable = true)

@@ -35,7 +35,7 @@ object Checks {
         var param = x(i).get(3).toString.substring(1, x(i).get(3).toString.length()-1)
         // removing the [] from the string and in the next line removing the "
         param = param.replace("\"", "")
-        seq = seq :+ (x(i).get(0).toString,x(i).get(1).toString,x(i).get(2).toString,Analyzers.stringToSeq(param))
+        seq = seq :+ (x(i).get(0).toString,x(i).get(1).toString,x(i).get(2).toString,HelperFunctions.stringToSeq(param))
       }
     }
     finalCheck(seq)

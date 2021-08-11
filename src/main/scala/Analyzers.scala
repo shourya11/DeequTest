@@ -3,17 +3,9 @@ import com.amazon.deequ.analyzers._
 object Analyzers {
 
   var arr = Array[(String,String,String)]()
-  var splitSeq = Seq[String]()
   var i = 0
   var j = 0
 
-  def stringToSeq(s: String) = {
-    var x = s.split(",")
-    for (i <- Range(0,x.length)){
-      splitSeq = splitSeq :+ x(i)
-    }
-    splitSeq
-  }
 
 // for one column put it in default case and for multiple column taking put it in specific swtiches
   def finalAnalyzer (analyser :Array[(String,String,String)]) = {
@@ -61,7 +53,7 @@ object Analyzers {
       case("MutualInformation",str,null) => {
         var str2 = str.substring(1, str.length()-1)
         str2 = str2.replace("\"", "")
-        b  = b.addAnalyzer(MutualInformation(stringToSeq(str2)))
+        b  = b.addAnalyzer(MutualInformation(HelperFunctions.stringToSeq(str2)))
       }
       case("Distinctness",str,null) => {
         b  = b.addAnalyzer(Distinctness(str))

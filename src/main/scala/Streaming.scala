@@ -12,9 +12,9 @@ object Streaming {
   val spark : SparkSession = SparkSession.builder().getOrCreate()
   import spark.implicits._
 
-  def run(Format:String,Path:String,analysers:Analysis,checks:Seq[Check]): Unit = {
+  def run(InputFormat:String,InputPath:String,analysers:Analysis,checks:Seq[Check]): Unit = {
 
-    var base_df = spark.read.schema(SchemaData.jsonSourceSchema).format(Format).load(Path)
+    var base_df = spark.read.schema(SchemaData.jsonSourceSchema).format(InputFormat).load(InputPath)
     val empty_df = base_df.where("0 = 1")
     val l1: Long = 0
 
@@ -34,8 +34,8 @@ object Streaming {
     val original_data = spark.readStream
       .schema(SchemaData.jsonSourceSchema)
       //    .option("maxFilesPerTrigger",20)
-      .format(Format)
-      .load(Path)
+      .format(InputFormat)
+      .load(InputPath)
 
     val renamedData = RenameData.dataRenamed(original_data)
 
