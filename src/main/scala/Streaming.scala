@@ -12,7 +12,7 @@ object Streaming {
   val spark : SparkSession = SparkSession.builder().getOrCreate()
   import spark.implicits._
 
-  def run(Format:String,Path:String,analysers:Analysis): Unit = {
+  def run(Format:String,Path:String,analysers:Analysis,checks:Seq[Check]): Unit = {
 
     var base_df = spark.read.schema(SchemaData.jsonSourceSchema).format(Format).load(Path)
     val empty_df = base_df.where("0 = 1")
@@ -29,14 +29,6 @@ object Streaming {
     val stateStoreCurr = InMemoryStateProvider()
     val stateStoreNext = InMemoryStateProvider()
 
-    var asd = Seq[Check]()
-    val y =  Check(CheckLevel.Error, "objectClass check")
-                .isContainedIn("object_class", DataArrays.object_classArray)
-    val z = Check(CheckLevel.Error, "agreementNumber check")
-                .areComplete(Seq("agreement_number"))
-
-    asd = asd :+ y :+ z
-
     println("reading data")
 
     val original_data = spark.readStream
@@ -46,8 +38,6 @@ object Streaming {
       .load(Path)
 
     val renamedData = RenameData.dataRenamed(original_data)
-
-    //  Check(CheckLevel.Error,"deded").areComplete(Seq("njdej"))
 
     renamedData
       .writeStream
@@ -66,21 +56,9 @@ object Streaming {
         val verificationResult = VerificationSuite()
           .onData(batchDF)
           .addChecks(
-            asd
+            checks
           )
           .run()
-
-        //      val verificationResult = VerificationSuite()
-        //        .onData(batchDF)
-        //        .addCheck(
-        //          Check(CheckLevel.Error, "objectClass check")
-        //            .isContainedIn("object_class", DataArrays.object_classArray)
-        //        )
-        //        .addCheck(
-        //          Check(CheckLevel.Error, "agreementNumber check")
-        //            .areComplete(Seq("agreement_number"))
-        //        )
-        //        .run()
 
         val x = checkResultsAsDataFrame(spark, verificationResult)
 
@@ -96,7 +74,6 @@ object Streaming {
 
         metric_results.write.format("parquet").mode("Overwrite").saveAsTable("deequ_metrics")
 
-        //          Main.main()
         println("back in streaming")
 
       }
@@ -106,6 +83,20 @@ object Streaming {
     //  val batchCounts = spark.read.format("parquet").table("bad_records")
     //    .groupBy($"batchId").count()
     //  batchCounts.printSchema()
+
+
+    //      val verificationResult = VerificationSuite()
+    //        .onData(batchDF)
+    //        .addCheck(
+    //          Check(CheckLevel.Error, "objectClass check")
+    //            .isContainedIn("object_class", DataArrays.object_classArray)
+    //        )
+    //        .addCheck(
+    //          Check(CheckLevel.Error, "agreementNumber check")
+    //            .areComplete(Seq("agreement_number"))
+    //        )
+    //        .run()
+
   }
 }
 

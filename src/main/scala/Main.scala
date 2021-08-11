@@ -1,7 +1,5 @@
-import org.apache.spark.sql.types.{ArrayType, DoubleType, MapType, StringType, StructType}
 import org.apache.spark.sql.{SparkSession, _}
-import org.apache.spark.sql.functions.{col, current_timestamp, explode, lit}
-import org.apache.spark.sql.types.StringType
+import org.apache.spark.sql.functions.explode
 
 object Main {
 
@@ -35,9 +33,10 @@ object Main {
   var analysers = Analyzers.AnalyzerArr(AnalyzersCollected)
 
   var checks = Checks.ChecksSeq(ChecksCollected)
-//  println(b)
+  println(checks)
 
-  Streaming.run(Format,Path,analysers)
+
+  Streaming.run(Format,Path,analysers,checks)
 }
 
 
