@@ -13,6 +13,7 @@ object SchemaData {
       .add("function",StringType,nullable = true)
       .add("columnName",StringType,nullable = true)
       .add("params",StringType,nullable = true)
+      .add("multipleColumns",StringType,nullable = true)
     )))
     .add("Source",new StructType()
       .add("Path",StringType)
