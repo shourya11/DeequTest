@@ -7,7 +7,7 @@ object Main {
 
   import spark.implicits._
 
-  def main(args: Array[String]): Unit = {
+  def main(): Unit = {
 
     val data = spark.read.option("multiLine", "true").schema(SchemaData.inputJsonSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\inputJson.json")
     data.show()
@@ -15,14 +15,17 @@ object Main {
     var InputPath = data.select($"Source.*").select($"Path").head().toString
     InputPath = InputPath.substring(1, InputPath.length() - 1)
 
-    var DestPath = data.select($"Destination.*").select($"Path").head().toString
-    DestPath = DestPath.substring(1, DestPath.length() - 1)
-
     var InputFormat = data.select($"Source.*").select($"Format").head().toString
     InputFormat = InputFormat.substring(1, InputFormat.length() - 1)
 
-    var DestFormat = data.select($"Source.*").select($"Format").head().toString
-    DestFormat = DestFormat.substring(1, InputFormat.length() - 1)
+    var DestPath = data.select($"Destination.*").select($"Path").head().toString
+    DestPath = DestPath.substring(1, DestPath.length() - 1)
+
+    var DestFormat = data.select($"Destination.*").select($"Format").head().toString
+    DestFormat = DestFormat.substring(1, DestFormat.length() - 1)
+
+    var DestMode = data.select($"Destination.*").select($"Mode").head().toString
+    DestMode = DestMode.substring(1, DestMode.length() - 1)
 
     val DeequAnalyzers = data.select(explode($"Deequ.Analysers").as("Analysers")).select($"Analysers.*")
 
@@ -38,9 +41,10 @@ object Main {
     val analysers = Analyzers.AnalyzerArr(AnalyzersCollected)
 
     val checks = Checks.ChecksSeq(ChecksCollected)
-    println(checks)
 
-    Streaming.run(InputFormat, InputPath, analysers, checks)
+//    println(checks)
+
+    Streaming.run(InputFormat, InputPath,  DestFormat, DestPath, DestMode, analysers, checks)
 
   }
 }

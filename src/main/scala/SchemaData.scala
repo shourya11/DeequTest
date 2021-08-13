@@ -20,7 +20,8 @@ object SchemaData {
       .add("Format",StringType))
     .add("Destination",new StructType()
       .add("Path",StringType)
-      .add("Format",StringType))
+      .add("Format",StringType)
+      .add("Mode",StringType))
 
   val sysAuditSchema = new StructType().add("objectClass", StringType,nullable = true)
 //    .add("objectId", StringType,nullable = true)

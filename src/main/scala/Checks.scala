@@ -12,7 +12,7 @@ object Checks {
   def finalCheck(seq: Seq[(String,String,String,Seq[String],Seq[String])]) = {
     var checkSeq = Seq[Check]()
     seq.foreach{
-      case (checkName,"hasSize",columnName,params,multipleColumns) => {
+      case (checkName,"hasSize",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasSize(_ >= params.head.toInt)
       }
@@ -28,15 +28,15 @@ object Checks {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasCompleteness(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"areComplete",columnName,params,multipleColumns) => {
+      case (checkName,"areComplete",null,null,multipleColumns) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .areComplete(multipleColumns)
       }
-      case (checkName,"haveCompleteness",columnName,params,multipleColumns) => {
+      case (checkName,"haveCompleteness",null,params,multipleColumns) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .haveCompleteness(multipleColumns,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"areAnyComplete",null,params,multipleColumns) => {
+      case (checkName,"areAnyComplete",null,null,multipleColumns) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .areAnyComplete(multipleColumns)
       }
@@ -48,7 +48,7 @@ object Checks {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .isUnique(columnName)
       }
-      case (checkName,"hasDistinctness",columnName,params,multipleColumns) => {
+      case (checkName,"hasDistinctness",null,params,multipleColumns) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasDistinctness(multipleColumns,v => v > params(0).toInt && v < params(1).toInt)
       }
@@ -64,99 +64,99 @@ object Checks {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasEntropy(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"hasMutualInformation",columnName,params,multipleColumns) => {
+      case (checkName,"hasMutualInformation",null,params,multipleColumns) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasMutualInformation(multipleColumns(0),multipleColumns(1),v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"hasApproxQuantile",columnName,params,multipleColumns) => {
+      case (checkName,"hasApproxQuantile",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasApproxQuantile(columnName,params(0).toDouble,v => v > params(1).toInt && v < params(2).toInt)
       }
-      case (checkName,"hasMinLength",columnName,params,multipleColumns) => {
+      case (checkName,"hasMinLength",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasMinLength(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"hasMaxLength",columnName,params,multipleColumns) => {
+      case (checkName,"hasMaxLength",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasMaxLength(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"hasMin",columnName,params,multipleColumns) => {
+      case (checkName,"hasMin",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasMin(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"hasMax",columnName,params,multipleColumns) => {
+      case (checkName,"hasMax",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasMax(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"hasMean",columnName,params,multipleColumns) => {
+      case (checkName,"hasMean",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasMean(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"hasSum",columnName,params,multipleColumns) => {
+      case (checkName,"hasSum",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasSum(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"hasStandardDeviation",columnName,params,multipleColumns) => {
+      case (checkName,"hasStandardDeviation",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasStandardDeviation(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"hasApproxCountDistinct",columnName,params,multipleColumns) => {
+      case (checkName,"hasApproxCountDistinct",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasApproxCountDistinct(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"hasCorrelation",columnName,params,multipleColumns) => {
+      case (checkName,"hasCorrelation",null,params,multipleColumns) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasCorrelation(multipleColumns(0),multipleColumns(1),v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"hasPattern",columnName,params,multipleColumns) => {
+      case (checkName,"hasPattern",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasPattern(columnName,params(0).r(),v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"hasPattern",columnName,params,multipleColumns) => {
+      case (checkName,"hasPattern",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasPattern(columnName,params(0).r(),v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"containsCreditCardNumber",columnName,params,multipleColumns) => {
+      case (checkName,"containsCreditCardNumber",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .containsCreditCardNumber(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"containsEmail",columnName,params,multipleColumns) => {
+      case (checkName,"containsEmail",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .containsEmail(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"containsURL",columnName,params,multipleColumns) => {
+      case (checkName,"containsURL",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .containsURL(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"containsSocialSecurityNumber",columnName,params,multipleColumns) => {
+      case (checkName,"containsSocialSecurityNumber",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .containsSocialSecurityNumber(columnName,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"hasDataType",columnName,params,multipleColumns) => {
+      case (checkName,"hasDataType",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .hasDataType(columnName,("ConstrainableDataTypes." + params(0)).asInstanceOf[ConstrainableDataTypes.Value], v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"isNonNegative",columnName,params,multipleColumns) => {
+      case (checkName,"isNonNegative",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .isNonNegative(columnName, v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"isPositive",columnName,params,multipleColumns) => {
+      case (checkName,"isPositive",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .isPositive(columnName, v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"isLessThan",columnName,params,multipleColumns) => {
+      case (checkName,"isLessThan",null,params,multipleColumns) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .isLessThan(multipleColumns(0),multipleColumns(1), v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"isLessThanOrEqualTo",columnName,params,multipleColumns) => {
+      case (checkName,"isLessThanOrEqualTo",null,params,multipleColumns) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .isLessThanOrEqualTo(multipleColumns(0),multipleColumns(1), v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"isGreaterThan",columnName,params,multipleColumns) => {
+      case (checkName,"isGreaterThan",null,params,multipleColumns) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .isGreaterThan(multipleColumns(0),multipleColumns(1), v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"isGreaterThanOrEqualTo",columnName,params,multipleColumns) => {
+      case (checkName,"isGreaterThanOrEqualTo",null,params,multipleColumns) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .isGreaterThanOrEqualTo(multipleColumns(0),multipleColumns(1), v => v > params(0).toInt && v < params(1).toInt)
       }
@@ -168,7 +168,7 @@ object Checks {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .isContainedIn(columnName,multipleColumns.toArray,v => v > params(0).toInt && v < params(1).toInt)
       }
-      case (checkName,"isContainedIn",columnName,params,multipleColumns) => {
+      case (checkName,"isContainedIn",columnName,params,null) => {
         checkSeq = checkSeq :+ Check(CheckLevel.Error,checkName)
           .isContainedIn(columnName,params(0).toDouble,params(1).toDouble,params(2).toBoolean,params(3).toBoolean)
       }
@@ -211,11 +211,18 @@ object Checks {
         param = param.replace("\"", "")
 
         if (x(i).get(4) == null) {
-          seq = seq :+ (x(i).get(0).toString,x(i).get(1).toString,x(i).get(2).toString,HelperFunctions.stringToSeq(param),null)
+          if (x(i).get(2) == null) {
+            seq = seq :+ (x(i).get(0).toString, x(i).get(1).toString, null, HelperFunctions.stringToSeq(param), null)
+          }
+          else {
+            seq = seq :+ (x(i).get(0).toString, x(i).get(1).toString, x(i).get(2).toString, HelperFunctions.stringToSeq(param), null)
+          }
         }
         else {
-          val mcolumns = x(i).get(4).toString.substring(1, x(i).get(4).toString.length()-1)
+          var mcolumns = x(i).get(4).toString.substring(1, x(i).get(4).toString.length()-1)
+          mcolumns = mcolumns.replace("\"", "")
           val mcolumnsSeq = HelperFunctions.stringToSeq(mcolumns)
+
 
             if (x(i).get(2) == null) {
               seq = seq :+ (x(i).get(0).toString, x(i).get(1).toString, null, HelperFunctions.stringToSeq(param), mcolumnsSeq)

@@ -7,9 +7,9 @@ import scala.util.{Failure, Success, Try}
 
 object HelperFunctions {
   val spark = SparkSession.builder().getOrCreate()
-  var splitSeq = Seq[String]()
 
   def stringToSeq(s: String) = {
+    var splitSeq = Seq[String]()
     var x = s.split(",")
     for (i <- Range(0,x.length)){
       splitSeq = splitSeq :+ x(i)
