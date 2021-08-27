@@ -11,17 +11,26 @@ object HelperFunctions {
   def stringToSeq(s: String) = {
     var splitSeq = Seq[String]()
     var x = s.split(",")
-    for (i <- Range(0,x.length)){
+    for (i <- Range(0, x.length)) {
       splitSeq = splitSeq :+ x(i)
     }
     splitSeq
   }
 
+  def stringToMap(s: String) = {
+    s.substring(1, s.length - 1)
+      .split(",")
+      .map(_.split(":"))
+      .map { case Array(k, v) => (k.substring(1, k.length - 1), v.substring(1, v.length - 1)) }
+      .toMap
+  }
 
-  def FileName: ((String) => String) = { (s) =>(s.split("/").reverse(0))}
+
+  def FileName: ((String) => String) = { (s) => (s.split("/").reverse(0)) }
+
   val myFileName = udf(FileName)
 
-  val getTimestampWithMilis: ((String , String) => Option[Timestamp]) = (input, frmt) => input match {
+  val getTimestampWithMilis: ((String, String) => Option[Timestamp]) = (input, frmt) => input match {
     case "" => None
     case _ => {
       val format = new SimpleDateFormat(frmt)

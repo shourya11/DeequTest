@@ -13,14 +13,6 @@ object Checks {
   var i = 0
   var j = 0
 
-  def stringToMap(s: String) = {
-    s.substring(1, s.length - 1)
-      .split(",")
-      .map(_.split(":"))
-      .map { case Array(k, v) => (k.substring(1, k.length - 1), v.substring(1, v.length - 1)) }
-      .toMap
-  }
-
   def finalCheck(seq: Seq[(String, String, String, Map[String, String], Seq[String])]) = {
     var checkSeq = Seq[Check]()
     seq.foreach {
@@ -217,9 +209,9 @@ object Checks {
         }
       }
       else {
-        val params = stringToMap(x(i).get(3).toString)
+        val params = HelperFunctions.stringToMap(x(i).get(3).toString)
         // removing the [] from the string and in the next line removing the "
-        //        params = params.replace("\"", "")
+        // params = params.replace("\"", "") to remove " from the chars
 
         if (x(i).get(4) == null) {
           if (x(i).get(2) == null) {
