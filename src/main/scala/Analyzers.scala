@@ -51,26 +51,29 @@ object Analyzers {
         b  = b.addAnalyzer(Uniqueness(str))
       }
       case("MutualInformation",str,null) => {
-        var str2 = str.substring(1, str.length()-1)
+        var str2 = str.substring(1, str.length() - 1)
         str2 = str2.replace("\"", "")
-        b  = b.addAnalyzer(MutualInformation(HelperFunctions.stringToSeq(str2)))
+        b = b.addAnalyzer(MutualInformation(HelperFunctions.stringToSeq(str2)))
       }
-      case("Distinctness",str,null) => {
-        b  = b.addAnalyzer(Distinctness(str))
+      case ("Distinctness", str, null) => {
+        b = b.addAnalyzer(Distinctness(str))
       }
-      case("CountDistinct",str,null) => {
-        b  = b.addAnalyzer(CountDistinct(str))
+      case ("CountDistinct", str, null) => {
+        b = b.addAnalyzer(CountDistinct(str))
       }
-      case("Correlation",str,str2) => {
-        b  = b.addAnalyzer(Correlation(str,str2))
+      case ("Correlation", str, null) => {
+        var str2 = str.substring(1, str.length() - 1)
+        str2 = str2.replace("\"", "") // removing array from multiple column string
+        val s = HelperFunctions.stringToSeq(str2) // converting it to a proper sequence
+        b = b.addAnalyzer(Correlation(s(0), s(1))) //getting column 1 and 2 from the sequence
       }
-      case("ApproxCountDistinct",str,null) => {
-        b  = b.addAnalyzer(ApproxCountDistinct(str))
+      case ("ApproxCountDistinct", str, null) => {
+        b = b.addAnalyzer(ApproxCountDistinct(str))
       }
-      case("ApproxQuantile",str,str2) => {
-        b  = b.addAnalyzer(ApproxQuantile(str,str2.toDouble))
+      case ("ApproxQuantile", str, str2) => {
+        b = b.addAnalyzer(ApproxQuantile(str, str2.toDouble))
       }
-      case("DataType",str,null) => {
+      case ("DataType", str, null) => {
         b = b.addAnalyzer(DataType(str))
       }
       case("Entropy",str,null) => {

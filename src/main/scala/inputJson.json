@@ -1,67 +1,63 @@
 {
-  "Deequ":
-  {
-    "Analysers":
-    [
+  "Deequ": {
+    "Analysers": [
       {
-        "function":"Size"
+        "function": "Size"
+      },
+      {
+        "columnName": "agreement_number",
+        "function": "Completeness"
+      },
+      {
+        "columnName": "object_class",
+        "function": "MaxLength"
+      },
+      {
+        "columnName": "agreement_number",
+        "function": "Compliance",
+        "condition": "agreement_number == 000019d"
+      },
+      {
+        "columnName": [
+          "object_class",
+          "agreement_number"
+        ],
+        "function": "MutualInformation"
+      }
+    ],
+    "Checks": [
+      {
+        "checkName": "Completeness",
+        "function": "isComplete",
+        "columnName": "agreement_number"
+      },
+      {
+        "checkName": "Size",
+        "function": "hasSize",
+        "params": {
+          "minValue": "100"
         }
-        ,
-        {
-          "columnName":"agreement_number",
-          "function":"Completeness"
-        }
-        ,
-        {
-          "columnName":"object_class",
-          "function":"MaxLength"
-        }
-        ,
-        {
-          "columnName":"agreement_number",
-          "function":"Compliance",
-          "condition":"agreement_number == 000019d"
-        }
-        ,
-        {
-          "columnName":["object_class","agreement_number"],
-          "function":"MutualInformation"
-        }
-      ]
-      ,
-      "Checks":
-      [
-          {
-            "checkName":"Completeness",
-            "function":"isComplete",
-            "columnName":"agreement_number"
-          }
-          ,
-          {
-            "checkName":"Size",
-            "function":"hasSize",
-            "params":["69"]
-          }
-          ,
-          {
-            "checkName":"Distinct",
-            "function":"hasDistinctness",
-            "params":["0","5"],
-            "multipleColumns":["agreement_number"]
-          }
+      },
+      {
+        "checkName": "Distinct",
+        "function": "hasDistinctness",
+        "params": {
+          "minValue": "0",
+          "maxValue": "5"
+        },
+        "multipleColumns": [
+          "agreement_number"
         ]
-    }
-    ,
-    "Source":
-    {
-      "Path":"C:\\Users\\shour\\Desktop\\Whiteklay\\data",
-      "Format":"json"
-    }
-    ,
-    "Destination":
-    {
-      "Path":"C:\\Users\\shour\\Desktop\\Whiteklay\\Generic",
-      "Format":"parquet",
-      "Mode":"overwrite"
-    }
+      }
+    ]
+  },
+  "Source": {
+    "Path": "C:\\Users\\shour\\Desktop\\Whiteklay\\data",
+    "Format": "json"
+  },
+  "Destination": {
+    "Path": "C:\\Users\\shour\\Desktop\\Whiteklay\\Generic",
+    "Format": "parquet",
+    "Mode": "overwrite"
+  }
 }

@@ -7,9 +7,9 @@ object Main {
 
   import spark.implicits._
 
-  def main(): Unit = {
-
-    val data = spark.read.option("multiLine", "true").schema(SchemaData.inputJsonSchema).format("json").load("C:\\Users\\shour\\Desktop\\Whiteklay\\inputJson.json")
+  def main(args: Array[String]): Unit = {
+    val jsonPath = args(0)
+    val data = spark.read.option("multiLine", "true").schema(SchemaData.inputJsonSchema).format("json").load(jsonPath)
     data.show()
 
     var InputPath = data.select($"Source.*").select($"Path").head().toString
