@@ -2,12 +2,8 @@ import com.amazon.deequ.analyzers._
 
 object Analyzers {
 
-  var arr = Array[(String,String,String)]()
   var i = 0
-  var j = 0
 
-
-// for one column put it in default case and for multiple column taking put it in specific swtiches
   def finalAnalyzer (analyser :Array[(String,String,String)]) = {
     var b = Analysis()
     analyser.foreach{
@@ -91,6 +87,7 @@ object Analyzers {
   }
 
   def AnalyzerArr(x: Array[org.apache.spark.sql.Row]) = {
+    var arr = Array[(String, String, String)]()
     for (i <- Range(0,x.length)){
       if (x(i).get(1) == null){
         arr = arr :+ (x(i).get(0).toString,null,null)
