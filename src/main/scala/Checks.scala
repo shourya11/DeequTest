@@ -116,10 +116,6 @@ object Checks {
         checkSeq = checkSeq :+ Check(CheckLevel.Error, checkName)
           .hasPattern(columnName, params("pattern").r(), v => v > params("minValue").toInt && v < params("maxValue").toInt)
 
-      case (checkName, "hasPattern", columnName, params, null) =>
-        checkSeq = checkSeq :+ Check(CheckLevel.Error, checkName)
-          .hasPattern(columnName, params("pattern").r(), v => v > params("minValue").toInt && v < params("maxValue").toInt)
-
       case (checkName, "containsCreditCardNumber", columnName, params, null) =>
         checkSeq = checkSeq :+ Check(CheckLevel.Error, checkName)
           .containsCreditCardNumber(columnName, v => v > params("minValue").toInt && v < params("maxValue").toInt)
