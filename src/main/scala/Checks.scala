@@ -58,11 +58,11 @@ object Checks {
 
       case (checkName, "hasUniqueness", null, params, multipleColumns) =>
         checkSeq = checkSeq :+ Check(CheckLevel.Error, checkName)
-          .hasUniqueness(multipleColumns, v => v > params("minValue").toInt && v < params("maxValue").toInt)
+          .hasUniqueness(multipleColumns, (v: Double) => v > params("minValue").toInt && v < params("maxValue").toInt)
 
       case (checkName, "hasUniqueness", columnName, params, null) =>
         checkSeq = checkSeq :+ Check(CheckLevel.Error, checkName)
-          .hasUniqueness(columnName, v => v > params("minValue").toInt && v < params("maxValue").toInt)
+          .hasUniqueness(columnName, (v: Double) => v > params("minValue").toInt && v < params("maxValue").toInt)
 
       case (checkName, "hasEntropy", columnName, params, null) =>
         checkSeq = checkSeq :+ Check(CheckLevel.Error, checkName)
