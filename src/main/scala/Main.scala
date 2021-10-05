@@ -7,8 +7,8 @@ object Main {
 
   import spark.implicits._
 
-  def main(args: Array[String]): Unit = {
-    val jsonPath = args(0)
+  def main(jsonPath: String): Unit = {
+
     val data = spark.read.option("multiLine", "true").schema(SchemaData.inputJsonSchema).format("json").load(jsonPath)
     data.show()
 
