@@ -7,41 +7,45 @@ import com.amazon.deequ.checks.{Check, CheckLevel, CheckStatus}
 import com.amazon.deequ.analyzers.runners.AnalysisRunner
 import com.amazon.deequ.analyzers.runners.AnalyzerContext.successMetricsAsDataFrame
 import com.amazon.deequ.analyzers._
+import com.amazon.deequ.repository.ResultKey
+import com.amazon.deequ.repository.fs.FileSystemMetricsRepository
+import java.io._
 
 object Streaming {
-  val spark : SparkSession = SparkSession.builder().getOrCreate()
-  import spark.implicits._
 
-  def run(InputFormat:String,InputPath:String,DestFormat:String,DestPath:String,DestMode:String,analysers:Analysis,checks:Seq[Check]): Unit = {
+  val spark: SparkSession = SparkSession.builder().getOrCreate()
+  val metricsFile = new File("C:\\Users\\shour\\Desktop\\Whiteklay\\metrics.json")
+  val repository = FileSystemMetricsRepository(spark, metricsFile.getAbsolutePath)
+  val resultKey = ResultKey(
+    System.currentTimeMillis(),
+    Map("tag" -> "repositoryExample")
+  )
+
+  def run(InputFormat: String, InputPath: String, DestFormat: String, DestPath: String, DestMode: String, analysers: Analysis, checks: Seq[Check]): Unit = {
 
     var base_df = spark.read.schema(SchemaData.jsonSourceSchema).format(InputFormat).load(InputPath)
     val empty_df = base_df.where("0 = 1")
     val l1: Long = 0
 
-//    spark.sql("DROP TABLE IF EXISTS trades_delta")
     spark.sql("DROP TABLE IF EXISTS checks_table")
     spark.sql("DROP TABLE IF EXISTS analysers_table")
 
-//    base_df.createOrReplaceTempView("trades_historical")
-//    empty_df.write.format(DestFormat).saveAsTable("trades_delta")
     empty_df.withColumn("batchID", lit(l1)).write.format(DestFormat).saveAsTable("checks_table")
 
     val stateStoreCurr = InMemoryStateProvider()
     val stateStoreNext = InMemoryStateProvider()
 
     println("reading data")
-
     val original_data = spark.readStream
       .schema(SchemaData.jsonSourceSchema)
-      //    .option("maxFilesPerTrigger",20)
+      //      .option("maxFilesPerTrigger",20)
       .format(InputFormat)
       .load(InputPath)
 
     val renamedData = RenameData.dataRenamed(original_data)
 
-    //  Check(CheckLevel.Error,"deded").areComplete(Seq("njdej"))
-
     renamedData
+      //      .withWatermark("","")
       .writeStream
       //        .outputMode("update")
       .trigger(Trigger.Once())
@@ -60,6 +64,8 @@ object Streaming {
           .addChecks(
             checks
           )
+          .useRepository(repository)
+          .saveOrAppendResult(resultKey)
           .run()
 
         //      val verificationResult = VerificationSuite()
@@ -75,29 +81,33 @@ object Streaming {
         //        .run()
 
         val x = checkResultsAsDataFrame(spark, verificationResult)
-
         if (verificationResult.status != CheckStatus.Success) {
-          x.write.format(DestFormat).mode(DestMode).saveAsTable("checks_table")
+          //          x.write.format(DestFormat).mode(DestMode).saveAsTable("checks_table")
+          //showing verification results
           x.show()
         }
 
         val metric_results = successMetricsAsDataFrame(spark, metricsResult)
           .withColumn("ts", current_timestamp())
-
+        //showing analysis results
         metric_results.show()
-
-        metric_results.write.format(DestFormat).mode("Overwrite").saveAsTable("analysers_table")
-
-        //          Main.main()
-        println("back in streaming")
-
+        //        metric_results.write.format(DestFormat).mode(DestMode).saveAsTable("analysers_table")
       }
       .start()
       .awaitTermination()
 
-    //  val batchCounts = spark.read.format(DestFormat).table("checks_table")
-    //    .groupBy($"batchId").count()
-    //  batchCounts.printSchema()
+    //Reading the metric json after the streaming is complete
+    val completenessOfProductName = repository
+      .loadByKey(resultKey).get
+      .metric(Completeness("agreement_number")).get
+
+    println(s"The completeness of the agreementNumber column is: $completenessOfProductName")
+
+    repository.load()
+      .withTagValues(Map("tag" -> "repositoryExample"))
+      .getSuccessMetricsAsDataFrame(spark)
+      .show()
+
   }
 }
 
