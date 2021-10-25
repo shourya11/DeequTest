@@ -1,0 +1,78 @@
+[
+  {
+    "resultKey": {
+      "dataSetDate": 1634757192341,
+      "tags": {
+        "tag": "repositoryExample"
+      }
+    },
+    "analyzerContext": {
+      "metricMap": [
+        {
+          "analyzer": {
+            "analyzerName": "Completeness",
+            "column": "agreement_number"
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Column",
+            "instance": "agreement_number",
+            "name": "Completeness",
+            "value": 1.0
+          }
+        },
+        {
+          "analyzer": {
+            "analyzerName": "Size"
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Dataset",
+            "instance": "*",
+            "name": "Size",
+            "value": 66.0
+          }
+        },
+        {
+          "analyzer": {
+            "analyzerName": "Distinctness",
+            "columns": [
+              "agreement_number"
+            ]
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Column",
+            "instance": "agreement_number",
+            "name": "Distinctness",
+            "value": 0.015151515151515152
+          }
+        }
+      ]
+    }
+  },
+  {
+    "resultKey": {
+      "dataSetDate": 1634805729257,
+      "tags": {
+        "tag": "repositoryExample"
+      }
+    },
+    "analyzerContext": {
+      "metricMap": [
+        {
+          "analyzer": {
+            "analyzerName": "Size"
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Dataset",
+            "instance": "*",
+            "name": "Size",
+            "value": 66.0
+          }
+        }
+      ]
+    }
+  }
+]
