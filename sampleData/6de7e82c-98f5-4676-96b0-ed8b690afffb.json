@@ -1,0 +1,70 @@
+{
+  "address": "5ec34340f12d45c600c6001227bbb1d9e26b8bd24b5453c68e072b927215512266d3d9",
+  "transactionId": "76f1e6e517c8ba84c8ab1bb45d8acca21c03a4d077364744b82327b4506c4d9b47931914e22e891b7c07f27508d46f8b8e16b7b936ce21deaffc2dd211c67704",
+  "payload": {
+    "agreementNumber": "0000019d",
+    "agreementComponentId": "0000",
+    "coverageId": "0000",
+    "accountId": "1000",
+    "accountName": "IG_ACT_FUND",
+    "transactionType": "IG_TX_FUND_DEPOSIT_REGULAR_0",
+    "transactionValue": "{\"allocation\":0,\"units\":23332.6666666666666666667}",
+    "balance": "{\"allocation\":0.7,\"units\":23332.6666666666666666667}",
+    "transactionDate": "2021-05-31T07:16:39.994+0000",
+    "currencyCode": "HKD",
+    "walletAddress": "176afbb7-c6cb-4826-8865-8758a449234c",
+    "fundId": "ACTF",
+    "fundPrice": 3.0000000000000000000,
+    "pendingTransactions": [
+      {
+        "amount": 3499.9,
+        "date": "2021-05-31T07:16:39.994+0000",
+        "type": "IG_TX_FUND_ALLOCATION_CHARGE_REGULAR_1",
+        "sourceAccountId": "1000",
+        "objectClass": "io.ignatica.insurance.models.PendingTransaction"
+      }
+    ],
+    "sourceAccount": {
+      "accountId": "1000",
+      "walletAddress": "176afbb7-c6cb-4826-8865-8758a449234c",
+      "agreementNumber": "0000019d",
+      "agreementComponentId": "0000",
+      "coverageId": "0000",
+      "objectClass": "io.ignatica.insurance.models.SourceAccount"
+    },
+    "sysAudit": {
+      "sysEndPointURI": "/transaction",
+      "sysEndPointVersion": "1.0.0",
+      "sysEndPointMethod": "POST",
+      "sysTxDateStamp": "2021-05-31T07:19:14.412+0000",
+      "objectClass": "io.ignatica.models.IGAuditTrackerv1"
+    },
+    "status": "201",
+    "objectClass": "io.ignatica.insurance.models.HoldingAccount"
+  },
+  "contextId": "1141c06f68ee3e528243bc8e0bc3da4a40902604a5d4e116d4a9686718b551470f9c518953e96d909af252e629458e3ba95de5c7241b5e2f7eeb9f74fa8eafeb",
+  "telemetry": {
+    "x-b3-parentspanid": "0f63af8545bac5b4",
+    "content-length": "1337",
+    "igp-package-artifact": "blockchain-connector",
+    "igp-system-datetime": "2021-05-31T07:19:14.679353Z",
+    "igp-package-name": "BlockChainConnectorService",
+    "x-b3-sampled": "0",
+    "ig-api-key": "68bda860-c128-4926-bdfd-eaf2beda16d6",
+    "igp-endpoint-uri": "/bc/data-block",
+    "igp-api-key": "68bda860-c128-4926-bdfd-eaf2beda16d6",
+    "igp-package-version": "1.2.3",
+    "accept": "application/json, application/*+json",
+    "igp-keyvault-kid": "",
+    "x-b3-traceid": "0f63af8545bac5b4",
+    "x-b3-spanid": "21c67b02f6be3dc9",
+    "igp-runtime-java": "11",
+    "host": "10.244.2.40:8080",
+    "ign-system-ip": "10.244.2.40",
+    "content-type": "application/json",
+    "connection": "Keep-Alive",
+    "accept-encoding": "gzip,deflate",
+    "user-agent": "Apache-HttpClient/4.5.9 (Java/11.0.6)",
+    "igp-keyvault-id": ""
+  }
+}

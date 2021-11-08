@@ -1,7 +1,7 @@
 [
   {
     "resultKey": {
-      "dataSetDate": 1634757192341,
+      "dataSetDate": 1636363255255,
       "tags": {
         "tag": "repositoryExample"
       }
@@ -11,12 +11,12 @@
         {
           "analyzer": {
             "analyzerName": "Completeness",
-            "column": "agreement_number"
+            "column": "telemetry"
           },
           "metric": {
             "metricName": "DoubleMetric",
             "entity": "Column",
-            "instance": "agreement_number",
+            "instance": "telemetry",
             "name": "Completeness",
             "value": 1.0
           }
@@ -37,15 +37,15 @@
           "analyzer": {
             "analyzerName": "Distinctness",
             "columns": [
-              "agreement_number"
+              "telemetry"
             ]
           },
           "metric": {
             "metricName": "DoubleMetric",
             "entity": "Column",
-            "instance": "agreement_number",
+            "instance": "telemetry",
             "name": "Distinctness",
-            "value": 0.015151515151515152
+            "value": 1.0
           }
         }
       ]
@@ -53,13 +53,26 @@
   },
   {
     "resultKey": {
-      "dataSetDate": 1634805729257,
+      "dataSetDate": 1636363377064,
       "tags": {
         "tag": "repositoryExample"
       }
     },
     "analyzerContext": {
       "metricMap": [
+        {
+          "analyzer": {
+            "analyzerName": "Completeness",
+            "column": "telemetry"
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Column",
+            "instance": "telemetry",
+            "name": "Completeness",
+            "value": 1.0
+          }
+        },
         {
           "analyzer": {
             "analyzerName": "Size"
@@ -70,6 +83,229 @@
             "instance": "*",
             "name": "Size",
             "value": 66.0
+          }
+        },
+        {
+          "analyzer": {
+            "analyzerName": "Distinctness",
+            "columns": [
+              "telemetry"
+            ]
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Column",
+            "instance": "telemetry",
+            "name": "Distinctness",
+            "value": 1.0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "resultKey": {
+      "dataSetDate": 1636363560820,
+      "tags": {
+        "tag": "repositoryExample"
+      }
+    },
+    "analyzerContext": {
+      "metricMap": [
+        {
+          "analyzer": {
+            "analyzerName": "Completeness",
+            "column": "telemetry"
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Column",
+            "instance": "telemetry",
+            "name": "Completeness",
+            "value": 1.0
+          }
+        },
+        {
+          "analyzer": {
+            "analyzerName": "Size"
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Dataset",
+            "instance": "*",
+            "name": "Size",
+            "value": 66.0
+          }
+        },
+        {
+          "analyzer": {
+            "analyzerName": "Distinctness",
+            "columns": [
+              "telemetry"
+            ]
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Column",
+            "instance": "telemetry",
+            "name": "Distinctness",
+            "value": 1.0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "resultKey": {
+      "dataSetDate": 1636364002571,
+      "tags": {
+        "tag": "repositoryExample"
+      }
+    },
+    "analyzerContext": {
+      "metricMap": [
+        {
+          "analyzer": {
+            "analyzerName": "Completeness",
+            "column": "telemetry"
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Column",
+            "instance": "telemetry",
+            "name": "Completeness",
+            "value": 1.0
+          }
+        },
+        {
+          "analyzer": {
+            "analyzerName": "Size"
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Dataset",
+            "instance": "*",
+            "name": "Size",
+            "value": 66.0
+          }
+        },
+        {
+          "analyzer": {
+            "analyzerName": "Distinctness",
+            "columns": [
+              "telemetry"
+            ]
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Column",
+            "instance": "telemetry",
+            "name": "Distinctness",
+            "value": 1.0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "resultKey": {
+      "dataSetDate": 1636364065634,
+      "tags": {
+        "tag": "repositoryExample"
+      }
+    },
+    "analyzerContext": {
+      "metricMap": [
+        {
+          "analyzer": {
+            "analyzerName": "Completeness",
+            "column": "telemetry"
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Column",
+            "instance": "telemetry",
+            "name": "Completeness",
+            "value": 1.0
+          }
+        },
+        {
+          "analyzer": {
+            "analyzerName": "Size"
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Dataset",
+            "instance": "*",
+            "name": "Size",
+            "value": 66.0
+          }
+        },
+        {
+          "analyzer": {
+            "analyzerName": "Distinctness",
+            "columns": [
+              "telemetry"
+            ]
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Column",
+            "instance": "telemetry",
+            "name": "Distinctness",
+            "value": 1.0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "resultKey": {
+      "dataSetDate": 1636364117303,
+      "tags": {
+        "tag": "repositoryExample"
+      }
+    },
+    "analyzerContext": {
+      "metricMap": [
+        {
+          "analyzer": {
+            "analyzerName": "Completeness",
+            "column": "telemetry"
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Column",
+            "instance": "telemetry",
+            "name": "Completeness",
+            "value": 1.0
+          }
+        },
+        {
+          "analyzer": {
+            "analyzerName": "Size"
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Dataset",
+            "instance": "*",
+            "name": "Size",
+            "value": 66.0
+          }
+        },
+        {
+          "analyzer": {
+            "analyzerName": "Distinctness",
+            "columns": [
+              "telemetry"
+            ]
+          },
+          "metric": {
+            "metricName": "DoubleMetric",
+            "entity": "Column",
+            "instance": "telemetry",
+            "name": "Distinctness",
+            "value": 1.0
           }
         }
       ]

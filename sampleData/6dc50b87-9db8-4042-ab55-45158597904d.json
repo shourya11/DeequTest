@@ -1,0 +1,52 @@
+{
+  "address": "5ec34340f12d457bff42bbb1d9e26b8bd24b5453c68e072b927215512266d3d91236e5",
+  "transactionId": "9c3a274fe79b6901c6fea602fc2c6db6e9f6427f001827eaa3c414d7da970ceb0ea32376f0a18c17f6fa1685093a3080033c2f5fc05f29dc71b06913b266d441",
+  "payload": {
+    "agreementNumber": "0000019d",
+    "accountId": "0013",
+    "accountName": "IG_ACT_INWARD",
+    "transactionType": "IG_TX_FUND_PURCHASE_1",
+    "transactionValue": "-100000.0000000000000000000",
+    "balance": "0E-19",
+    "transactionDate": "2021-05-31T07:16:36.401+0000",
+    "currencyCode": "HKD",
+    "walletAddress": "8432e62a-1114-4ab3-91b1-0a35338fabf1",
+    "sourceAccount": {
+      "objectClass": "io.ignatica.insurance.models.SourceAccount"
+    },
+    "sysAudit": {
+      "sysEndPointURI": "/transaction",
+      "sysEndPointVersion": "1.0.0",
+      "sysEndPointMethod": "POST",
+      "sysTxDateStamp": "2021-05-31T07:16:36.974+0000",
+      "objectClass": "io.ignatica.models.IGAuditTrackerv1"
+    },
+    "status": "201",
+    "objectClass": "io.ignatica.insurance.models.HoldingAccount"
+  },
+  "contextId": "1141c06f68ee3e528243bc8e0bc3da4a40902604a5d4e116d4a9686718b551470f9c518953e96d909af252e629458e3ba95de5c7241b5e2f7eeb9f74fa8eafeb",
+  "telemetry": {
+    "x-b3-parentspanid": "e3f51697e0e4d0f0",
+    "content-length": "766",
+    "igp-package-artifact": "blockchain-connector",
+    "igp-system-datetime": "2021-05-31T07:16:37.232926Z",
+    "igp-package-name": "BlockChainConnectorService",
+    "x-b3-sampled": "0",
+    "ig-api-key": "68bda860-c128-4926-bdfd-eaf2beda16d6",
+    "igp-endpoint-uri": "/bc/data-block",
+    "igp-api-key": "68bda860-c128-4926-bdfd-eaf2beda16d6",
+    "igp-package-version": "1.2.3",
+    "accept": "application/json, application/*+json",
+    "igp-keyvault-kid": "",
+    "x-b3-traceid": "01374bbf9f91b816",
+    "x-b3-spanid": "77ddac881af3690a",
+    "igp-runtime-java": "11",
+    "host": "10.244.2.40:8080",
+    "ign-system-ip": "10.244.2.40",
+    "content-type": "application/json",
+    "connection": "Keep-Alive",
+    "accept-encoding": "gzip,deflate",
+    "user-agent": "Apache-HttpClient/4.5.9 (Java/11.0.6)",
+    "igp-keyvault-id": ""
+  }
+}

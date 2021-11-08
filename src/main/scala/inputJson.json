@@ -6,22 +6,17 @@
           "function": "Size"
         },
         {
-          "columnName": "agreement_number",
+          "columnName": "telemetry",
           "function": "Completeness"
         },
         {
-          "columnName": "object_class",
+          "columnName": "transactionId",
           "function": "MaxLength"
         },
         {
-          "columnName": "agreement_number",
-          "function": "Compliance",
-          "condition": "agreement_number == 000019d"
-        },
-        {
           "columnName": [
-            "object_class",
-            "agreement_number"
+            "transactionId",
+            "address"
           ],
           "function": "MutualInformation"
         }
@@ -30,7 +25,7 @@
         {
           "checkName": "Completeness",
           "function": "isComplete",
-          "columnName": "agreement_number"
+          "columnName": "telemetry"
         },
         {
           "checkName": "Size",
@@ -47,13 +42,13 @@
             "maxValue": "5"
           },
           "multipleColumns": [
-            "agreement_number"
+            "telemetry"
           ]
         }
       ]
     },
     "Source": {
-      "Path": "C:\\Users\\shour\\Desktop\\Whiteklay\\data",
+      "Path": "C:\\Users\\shour\\IdeaProjects\\DeequeTest\\sampleData",
       "Format": "json"
     },
     "Destination": {

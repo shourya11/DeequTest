@@ -1,0 +1,49 @@
+{
+  "address": "5ec34340f12d457b0f72bbb1d9e26b8bd24b5453c68e072b927215512266d3d91236e5",
+  "transactionId": "9279c6548ec9b3444c02a985bc207d35c9d2a7069ea2fb2010e2f8fada225d5b6af185d8a5823e190a70f1d23ad5035591019650594f8e826892dd468e219f1b",
+  "payload": {
+    "agreementNumber": "0000019d",
+    "accountId": "0015",
+    "accountName": "IG_ACT_PREMOUTSTANDING",
+    "transactionValue": "0",
+    "balance": "0",
+    "currencyCode": "HKD",
+    "walletAddress": "f3af2f0c-2f53-4fee-96a0-225bffdbf5f1",
+    "sourceAccount": {
+      "objectClass": "io.ignatica.insurance.models.SourceAccount"
+    },
+    "sysAudit": {
+      "sysEndPointURI": "/account",
+      "sysEndPointVersion": "1.0.0",
+      "sysEndPointMethod": "POST",
+      "sysTxDateStamp": "2021-05-31T07:13:53.313+0000",
+      "objectClass": "io.ignatica.models.IGAuditTrackerv1"
+    },
+    "objectClass": "io.ignatica.insurance.models.HoldingAccount"
+  },
+  "contextId": "1141c06f68ee3e528243bc8e0bc3da4a40902604a5d4e116d4a9686718b551470f9c518953e96d909af252e629458e3ba95de5c7241b5e2f7eeb9f74fa8eafeb",
+  "telemetry": {
+    "x-b3-parentspanid": "c214a2ea7bcb5475",
+    "content-length": "635",
+    "igp-package-artifact": "blockchain-connector",
+    "igp-system-datetime": "2021-05-31T07:13:53.580500Z",
+    "igp-package-name": "BlockChainConnectorService",
+    "x-b3-sampled": "0",
+    "ig-api-key": "68bda860-c128-4926-bdfd-eaf2beda16d6",
+    "igp-endpoint-uri": "/bc/data-block",
+    "igp-api-key": "68bda860-c128-4926-bdfd-eaf2beda16d6",
+    "igp-package-version": "1.2.3",
+    "accept": "application/json, application/*+json",
+    "igp-keyvault-kid": "",
+    "x-b3-traceid": "9f6b29c25d556aa1",
+    "x-b3-spanid": "05fe054808c2df8c",
+    "igp-runtime-java": "11",
+    "host": "10.244.2.40:8080",
+    "ign-system-ip": "10.244.2.40",
+    "content-type": "application/json",
+    "connection": "Keep-Alive",
+    "accept-encoding": "gzip,deflate",
+    "user-agent": "Apache-HttpClient/4.5.9 (Java/11.0.6)",
+    "igp-keyvault-id": ""
+  }
+}

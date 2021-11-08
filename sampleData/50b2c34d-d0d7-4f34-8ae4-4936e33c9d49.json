@@ -1,0 +1,57 @@
+{
+  "address": "5ec34340f12d45c600c6001227bbb1d9e26b8bd24b5453c68e072b927215512266d3d9",
+  "transactionId": "3564a260a0364ba4f23ef38d48e2b02795f8f32404e2a8ff6a13181c8c291a881fae122bdaa44d9375a45b45564e0c92f7eeb8c3069501abe0cc397a30a0f4c6",
+  "payload": {
+    "agreementNumber": "0000019d",
+    "agreementComponentId": "0000",
+    "coverageId": "0000",
+    "accountId": "1000",
+    "accountName": "IG_ACT_FUND",
+    "balance": "{\"units\":\"0.0\",\"allocation\":0.3}",
+    "transactionDate": "2021-05-19T10:29:52.000+0000",
+    "currencyCode": "HKD",
+    "walletAddress": "7b19ccd1-9c02-4ba8-b248-7b95a7862aeb",
+    "fundId": "ACHYF",
+    "sourceAccount": {
+      "accountId": "null",
+      "walletAddress": "null",
+      "agreementNumber": "null",
+      "agreementComponentId": "null",
+      "coverageId": "null",
+      "objectClass": "io.ignatica.insurance.models.SourceAccount"
+    },
+    "sysAudit": {
+      "sysEndPointURI": "/account",
+      "sysEndPointVersion": "1.0.0",
+      "sysEndPointMethod": "POST",
+      "sysTxDateStamp": "2021-05-31T07:12:48.948+0000",
+      "objectClass": "io.ignatica.models.IGAuditTrackerv1"
+    },
+    "objectClass": "io.ignatica.insurance.models.HoldingAccount"
+  },
+  "contextId": "1141c06f68ee3e528243bc8e0bc3da4a40902604a5d4e116d4a9686718b551470f9c518953e96d909af252e629458e3ba95de5c7241b5e2f7eeb9f74fa8eafeb",
+  "telemetry": {
+    "x-b3-parentspanid": "67b1e2489fba33d3",
+    "content-length": "871",
+    "igp-package-artifact": "blockchain-connector",
+    "igp-system-datetime": "2021-05-31T07:12:49.187662Z",
+    "igp-package-name": "BlockChainConnectorService",
+    "x-b3-sampled": "0",
+    "ig-api-key": "68bda860-c128-4926-bdfd-eaf2beda16d6",
+    "igp-endpoint-uri": "/bc/data-block",
+    "igp-api-key": "68bda860-c128-4926-bdfd-eaf2beda16d6",
+    "igp-package-version": "1.2.3",
+    "accept": "application/json, application/*+json",
+    "igp-keyvault-kid": "",
+    "x-b3-traceid": "9dca633241959b35",
+    "x-b3-spanid": "76f22913942ae0d4",
+    "igp-runtime-java": "11",
+    "host": "10.244.2.41:8080",
+    "ign-system-ip": "10.244.2.41",
+    "content-type": "application/json",
+    "connection": "Keep-Alive",
+    "accept-encoding": "gzip,deflate",
+    "user-agent": "Apache-HttpClient/4.5.9 (Java/11.0.6)",
+    "igp-keyvault-id": ""
+  }
+}

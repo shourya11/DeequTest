@@ -1,0 +1,58 @@
+{
+  "address": "5ec34340f12d45c600c6008c33bbb1d9e26b8bd24b5453c68e072b927215512266d3d9",
+  "transactionId": "0412288d9789d8bd8fdb379b5f60d65f0f75eda480c661da040aac8bc9785f1511bee3e47edc3bf3d8c1a0692cfb587370bef265c223349d96a88d736bc349f1",
+  "payload": {
+    "agreementNumber": "0000019d",
+    "agreementComponentId": "0000",
+    "coverageId": "0000",
+    "accountId": "0003",
+    "accountName": "IG_ACT_TAX",
+    "transactionType": "IG_TX_TAX_0",
+    "transactionValue": "25.0000000000000000000",
+    "balance": "4183.6300000000000000000",
+    "transactionDate": "2021-05-31T07:14:18.194+0000",
+    "walletAddress": "2fce7da1-c995-4cae-a5f7-11caacd0a94b",
+    "sourceAccount": {
+      "accountId": "1001",
+      "walletAddress": "44538fea-fc12-46e8-81bb-afa770dce65a",
+      "agreementNumber": "0000019d",
+      "agreementComponentId": "0000",
+      "objectClass": "io.ignatica.insurance.models.SourceAccount"
+    },
+    "sysAudit": {
+      "sysEndPointURI": "/transaction",
+      "sysEndPointVersion": "1.0.0",
+      "sysEndPointMethod": "POST",
+      "sysTxDateStamp": "2021-05-31T07:14:18.675+0000",
+      "sysRequestReference": "eaf993a84e1142a5ab7a667020ba3ac5",
+      "objectClass": "io.ignatica.models.IGAuditTrackerv1"
+    },
+    "status": "201",
+    "objectClass": "io.ignatica.insurance.models.HoldingAccount"
+  },
+  "contextId": "1141c06f68ee3e528243bc8e0bc3da4a40902604a5d4e116d4a9686718b551470f9c518953e96d909af252e629458e3ba95de5c7241b5e2f7eeb9f74fa8eafeb",
+  "telemetry": {
+    "x-b3-parentspanid": "bb3b62865237989d",
+    "content-length": "986",
+    "igp-package-artifact": "blockchain-connector",
+    "igp-system-datetime": "2021-05-31T07:14:18.891910Z",
+    "igp-package-name": "BlockChainConnectorService",
+    "x-b3-sampled": "0",
+    "ig-api-key": "68bda860-c128-4926-bdfd-eaf2beda16d6",
+    "igp-endpoint-uri": "/bc/data-block",
+    "igp-api-key": "68bda860-c128-4926-bdfd-eaf2beda16d6",
+    "igp-package-version": "1.2.3",
+    "accept": "application/json, application/*+json",
+    "igp-keyvault-kid": "",
+    "x-b3-traceid": "9f6b29c25d556aa1",
+    "x-b3-spanid": "1eee699e58dfceae",
+    "igp-runtime-java": "11",
+    "host": "10.244.2.42:8080",
+    "ign-system-ip": "10.244.2.42",
+    "content-type": "application/json",
+    "connection": "Keep-Alive",
+    "accept-encoding": "gzip,deflate",
+    "user-agent": "Apache-HttpClient/4.5.9 (Java/11.0.6)",
+    "igp-keyvault-id": ""
+  }
+}
